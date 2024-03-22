@@ -2,6 +2,7 @@ FROM node:20-alpine as build_stage
 
 RUN mkdir -p /home/node/app
 WORKDIR /home/node/app
+
 COPY ./web/package.json .
 
 RUN yarn

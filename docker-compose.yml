@@ -22,7 +22,6 @@ services:
       dockerfile: ./web/Dockerfile
     restart: unless-stopped
     volumes:
-      - ./web/dist:/usr/share/nginx/html
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
     ports:
       - ${APP_PORT}:80
