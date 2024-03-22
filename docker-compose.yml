@@ -1,0 +1,28 @@
+version: '3.8'
+services:
+  api:
+    build:
+      context: api
+      args:
+        DB_USER: ${DB_USER}
+        DB_PASS: ${DB_PASS}
+        DB_HOST: ${DB_HOST}
+        DB_NAME: ${DB_NAME}
+    volumes:
+      - ./api:/app
+    environment:
+      DATABASE_URL: "postgresql://${DB_USER}:${DB_PASS}@${DB_HOST}:5432/${DB_NAME}?schema=public"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+    - ${PRISMA_STUDIO_PORT}:5555
+  nginx:
+    build:
+      context: .
+      dockerfile: ./web/Dockerfile
+    restart: unless-stopped
+    volumes:
+      - ./web/dist:/usr/share/nginx/html
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - ${APP_PORT}:80

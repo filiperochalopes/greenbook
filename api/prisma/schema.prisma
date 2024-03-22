@@ -1,0 +1,67 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Specie {
+  id            Int            @id @default(autoincrement())
+  name          String
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  prescriptions PrescriptionSuggestion[]
+  popularNames  PopularName[]
+}
+
+model PopularName {
+  id          Int      @id @default(autoincrement())
+  name        String
+  observation String
+  specie      Specie[]
+}
+
+model PlantPart {
+  id            Int            @id @default(autoincrement())
+  name          String
+  description   String
+  prescriptions PrescriptionSuggestion[]
+}
+
+model TherapeuticEffect {
+  id      Int    @id @default(autoincrement())
+  term    String
+  meaning String
+}
+
+model SecondaryMetabolismDerivatives {
+  id          Int    @id @default(autoincrement())
+  name        String
+  description String
+}
+
+model HerbalPreparation {
+  id               Int    @id @default(autoincrement())
+  name             String
+  description      String
+  prescriptionBase String
+}
+
+model PrescriptionSuggestion {
+  id          Int       @id @default(autoincrement())
+  specie      Specie    @relation(fields: [specieId], references: [id])
+  part        PlantPart @relation(fields: [plantPartId], references: [id])
+  dosage      String
+  quantity    String
+  description String
+  specieId    Int
+  plantPartId Int
+}

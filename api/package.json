@@ -1,0 +1,17 @@
+{
+  "name": "greenbook-api",
+  "version": "0.1.0",
+  "description": "greenbook api for herbal medicine prescription",
+  "main": "index.js",
+  "author": "Filipe Lopes",
+  "license": "MIT",
+  "type": "module",
+  "devDependencies": {
+    "prisma": "^5.10.2"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.10.2",
+    "graphql": "^16.8.1",
+    "graphql-yoga": "^5.2.0"
+  }
+}
