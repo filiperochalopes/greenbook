@@ -15,7 +15,6 @@ RUN yarn
 
 WORKDIR /app
 
-RUN npx prisma db push
 RUN chmod +x start.sh
 
 CMD sh ./start.sh
