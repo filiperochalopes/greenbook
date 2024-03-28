@@ -9,7 +9,6 @@
 		"ghcr.io/devcontainers-contrib/features/typescript:2": {},
 		"ghcr.io/devcontainers-contrib/features/prettier:1": {}
 	},
-
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	// "features": {},
 
