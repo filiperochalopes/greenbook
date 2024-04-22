@@ -14,14 +14,15 @@ datasource db {
 }
 
 model Specie {
-  id                Int                      @id @default(autoincrement())
+  id                Int                              @id @default(autoincrement())
   name              String
-  description       String                   @db.Text
-  createdAt         DateTime                 @default(now())
-  updatedAt         DateTime                 @updatedAt
+  description       String                           @db.Text
+  createdAt         DateTime                         @default(now())
+  updatedAt         DateTime                         @updatedAt
   prescriptions     PrescriptionSuggestion[]
   popularNames      PopularName[]
   therapeuticEffect TherapeuticEffect[]
+  metabolites       SecondaryMetabolismDerivatives[]
 }
 
 model PopularName {
@@ -46,9 +47,10 @@ model TherapeuticEffect {
 }
 
 model SecondaryMetabolismDerivatives {
-  id          Int    @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   name        String
-  description String @db.Text
+  description String   @db.Text
+  Species     Specie[]
 }
 
 model HerbalPreparation {

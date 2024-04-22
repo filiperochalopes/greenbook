@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Start the first process
-node src/server.js &
+yarn start &
 
 # Start the second process
 npx prisma studio &

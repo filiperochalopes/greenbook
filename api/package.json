@@ -6,8 +6,12 @@
   "author": "Filipe Lopes",
   "license": "MIT",
   "type": "module",
+  "scripts": {
+    "start": "nodemon src/server.js"
+  },
   "devDependencies": {
-    "prisma": "^5.10.2"
+    "prisma": "^5.10.2",
+    "nodemon": "3.1.0"
   },
   "dependencies": {
     "@prisma/client": "^5.10.2",
