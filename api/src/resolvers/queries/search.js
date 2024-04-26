@@ -28,7 +28,7 @@ export default async (_, { q, filter }, ctx) => {
   results = results.concat(species.reduce((acc, cur) => [...acc, {
     name: cur.name,
     group: "Espécies",
-    url: `especie:${cur.id}`
+    q: `especie:${cur.id}`
   }], []))
 
   let popularNames = await ctx.prisma.popularName.findMany({
@@ -65,7 +65,7 @@ export default async (_, { q, filter }, ctx) => {
         {
           name: cur.name,
           group: "Nomes populares",
-          url: `nome-popular:${cur.id}`,
+          q: `nome-popular:${cur.id}`,
         },
       ],
       []
@@ -83,7 +83,7 @@ export default async (_, { q, filter }, ctx) => {
   results = results.concat(secondaryMetabolismDerivatives.reduce((acc, cur) => [...acc, {
     name: cur.name,
     group: "Derivados de metabólismo secundário",
-    url: `metabolito:${cur.id}`
+    q: `metabolito:${cur.id}`
   }], []))
 
   return results;

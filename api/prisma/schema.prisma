@@ -43,14 +43,14 @@ model TherapeuticEffect {
   id       Int      @id @default(autoincrement())
   term     String
   meaning  String
-  especies Specie[]
+  species Specie[]
 }
 
 model SecondaryMetabolismDerivatives {
   id          Int      @id @default(autoincrement())
   name        String
   description String   @db.Text
-  Species     Specie[]
+  species     Specie[]
 }
 
 model HerbalPreparation {
