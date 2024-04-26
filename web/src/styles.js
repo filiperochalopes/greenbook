@@ -15,6 +15,21 @@ export const GlobalStyle = createGlobalStyle`
       background: white;
   }
 
+  h1,
+  h2 {
+    font-family: Montsserat, sans-serif, system-ui;
+    display: block;
+    margin: 16px 0;
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
   .greenbook-logo {
     font-family: Montserrat, sans-serif, system-ui;
     font-weight: 700;

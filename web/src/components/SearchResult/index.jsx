@@ -23,6 +23,10 @@ const SearchResult = () => {
     }
   }, [data])
 
+  useEffect(() => {
+    console.log(searchResults)
+  },[searchResults])
+
   return (
     <Article>
       {Object.entries(searchResults.reduce((acc, obj) => {

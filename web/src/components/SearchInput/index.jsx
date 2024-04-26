@@ -17,21 +17,13 @@ const SearchInput = () => {
 
   // Debounced version of handleSearch function with a delay of 500ms
   const debouncedHandleSearch = useCallback(debounce((value) => {
-    if(value){
-      getSearch({ variables: { q: value, filter } });
-    }else{
-      setSearchResults([])
-      setIndividualResult({})
-      setFilter([])
-      setTherapeuticEffectsAndSymptomsHint([])
-    }
+    setSearchResults([])
+    setIndividualResult({})
+    getSearch({ variables: { q: value, filter } });
   }, 500), [getSearch, filter]);
 
-  const handleSearch = (event) => {
-    const { value } = event.target;
+  const handleSearch = (value) => {
     setSearchTerm(value);
-
-    // Call the debounced function with the input value
     debouncedHandleSearch(value);
   };
 
@@ -71,6 +63,12 @@ const SearchInput = () => {
     }
   }, [data])
 
+  useEffect(() => {
+    if(filter.length){
+      handleSearch(searchTerm)
+    }
+  }, [filter])
+
   return (
     <Container showingResults={Boolean(searchResults.length || individualResult.title)}>
       <div>
@@ -78,7 +76,7 @@ const SearchInput = () => {
         <a
           id="disclaimer-tooltip"
         >
-          <input type="search" id="search" placeholder="digite para pesquisar um nome de planta, sintomas, metabólitos secundários..." value={searchTerm} onChange={handleSearch} onFocus={handleFocus} onBlur={handleBlur} />
+          <input type="search" id="search" placeholder="digite para pesquisar um nome de planta, sintomas, metabólitos secundários..." value={searchTerm} onChange={e => handleSearch(e.target.value)} onFocus={handleFocus} onBlur={handleBlur} />
         </a>
 
       </div>
@@ -94,7 +92,8 @@ const SearchInput = () => {
           })}
         </div>
         <div>
-          {therapeuticEffectsAndSymptomsHint.map(hint => <button className="hint-box" onClick={() => {
+          {therapeuticEffectsAndSymptomsHint.map(hint => <button 
+          key={hint} className="hint-box" onClick={() => {
             setFilter([...filter, hint])
             setTherapeuticEffectsAndSymptomsHint(therapeuticEffectsAndSymptomsHint.filter(hintName => hintName !== hint))
           }}>{hint}</button>)}

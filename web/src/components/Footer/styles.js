@@ -3,7 +3,7 @@ import styled from "styled-components";
 export default styled.footer`
   font-family: Montserrat, sans-serif, system-ui;
   text-align: center;
-  margin-top: 2rem;
+  margin: 2rem 0;
 
   img{
     height: 40px;

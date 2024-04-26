@@ -6,33 +6,32 @@ export default styled.article`
     max-width: 900px;
     margin: 0 auto;
 
+    ul {
+      li {
+        list-style: none;
+        margin: 8px 0;
+
+        button{
+          display: inline;
+        }
+
+        p{
+          display: inline;
+        }
+      }
+    }
+
     > div {
       display: flex;
       justify-content: space-between;
     }
 
-    header {
-      h1 {
-        font-family: Montsserat, sans-serif, system-ui;
-        display: block;
-        margin: 16px 0;
-        font-size: 2rem;
-      }
-    }
-
-    button.result-box {
-      padding: 16px;
-      box-sizing: border-box;
-      box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.25);
-      border-radius: 20px;
+    button {
+      padding: 8px 16px;
+      border-radius: 8px;
+      margin-right: 4px;
+      outline: none;
       cursor: pointer;
-      margin-right: 16px;
-
-      &:hover {
-        background: #00802a;
-        color: white;
-        box-shadow: 0 0 0 4px rgba(0, 0, 0, 1);
-      }
     }
   }
 `;

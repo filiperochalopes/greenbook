@@ -8,7 +8,7 @@ export default styled.article`
 
     > div {
       display: flex;
-      justify-content: space-between;
+      flex-wrap: wrap;
     }
 
     header {
@@ -27,6 +27,8 @@ export default styled.article`
       border-radius: 20px;
       cursor: pointer;
       margin-right: 16px;
+      margin-bottom: 16px;
+      min-width: 120px;
 
       &:hover {
         background: #00802a;

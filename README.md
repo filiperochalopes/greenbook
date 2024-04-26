@@ -9,3 +9,7 @@ Criando migration no banco de dados e iniciando prisma client
 ```sh
 npx prisma migrate dev --name init 
 ```
+
+## Roadmap
+
+- Cópia de prescrição
