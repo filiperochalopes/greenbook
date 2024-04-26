@@ -5,7 +5,7 @@ export const schema = createSchema({
   typeDefs: /* GraphQL */ `
     type Query {
       hello: String
-      search(q:String!): [SearchInput]
+      search(q:String!, filter:[String]): [SearchInput]
     }
 
     type SearchInput {

@@ -1,2 +1,3 @@
-cp api
+cd web
 yarn
+yarn dev 

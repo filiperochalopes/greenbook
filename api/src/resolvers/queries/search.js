@@ -1,50 +1,90 @@
-export default async (_, { q }, ctx) => {
-  let results = []
+export default async (_, { q, filter }, ctx) => {
+  let results = [];
 
   // filter specie and other models by query string q
-  const species = await ctx.prisma.specie.findMany({
+  let species = await ctx.prisma.specie.findMany({
     where: {
       name: {
         contains: q
       }
-    }, take: 5
+    },
+    include: {
+      therapeuticEffect: true
+    }
+  })
+
+  // Filter Specie records to ensure they have all specified metabolites on filter list
+  species = species.filter((specie) => {
+    if (filter) {
+      return filter.every((filterName) => {
+        return specie.therapeuticEffect.some((therapeuticEffect) => {
+          return filterName === therapeuticEffect.term
+        })
+      })
+    }
+    return true
   })
 
   results = results.concat(species.reduce((acc, cur) => [...acc, {
     name: cur.name,
     group: "Espécies",
-    url: `/especie/${cur.id}`
+    url: `especie:${cur.id}`
   }], []))
 
-  const popularNames = await ctx.prisma.popularName.findMany({
+  let popularNames = await ctx.prisma.popularName.findMany({
     where: {
       name: {
-        contains: q
-      }
-    }, take: 5
+        contains: q,
+      },
+    },
+    include: {
+      specie: {
+        include: {
+          therapeuticEffect: true
+        },
+      },
+    },
+  });
+
+  // Filter PopularName records to ensure they have all specified metabolites on filter list
+  popularNames = popularNames.filter((popularName) => {
+    if (filter) {
+      return filter.every((filterName) => {
+        return popularName.specie[0]?.therapeuticEffect?.some((therapeuticEffect) => {
+          return filterName === therapeuticEffect.term
+        })
+      })
+    }
+    return true
   })
 
-  console.log(popularNames)
-
-  results = results.concat(popularNames.reduce((acc, cur) => [...acc, {
-    name: cur.name,
-    group: "Nomes populares",
-    url: `/nome-popular/${cur.id}`
-  }], []))
+  results = results.concat(
+    popularNames.reduce(
+      (acc, cur) => [
+        ...acc,
+        {
+          name: cur.name,
+          group: "Nomes populares",
+          url: `nome-popular:${cur.id}`,
+        },
+      ],
+      []
+    )
+  );
 
   const secondaryMetabolismDerivatives = await ctx.prisma.secondaryMetabolismDerivatives.findMany({
     where: {
       name: {
         contains: q
       }
-    }, take: 3
+    }, take: 7
   })
 
   results = results.concat(secondaryMetabolismDerivatives.reduce((acc, cur) => [...acc, {
     name: cur.name,
     group: "Derivados de metabólismo secundário",
-    url: `/derivado-de-metabolismo-secundário/${cur.id}`
+    url: `metabolito:${cur.id}`
   }], []))
 
-  return results
-}
+  return results;
+};
