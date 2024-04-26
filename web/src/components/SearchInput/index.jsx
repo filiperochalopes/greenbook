@@ -12,13 +12,19 @@ const SearchInput = () => {
     [therapeuticEffectsAndSymptomsHint, setTherapeuticEffectsAndSymptomsHint] = useState([]),
     [showDisclaimer, setShowDisclaimer] = useState(false),
     [showHintInfo, setShowHintInfo] = useState(false),
-    { searchResults, setSearchResults, individualResult, setLoading } = useContext(AppContext),
+    { searchResults, setSearchResults, individualResult, setIndividualResult, setLoading } = useContext(AppContext),
     [getSearch, { error, data, loading }] = useLazyQuery(SEARCH)
 
   // Debounced version of handleSearch function with a delay of 500ms
   const debouncedHandleSearch = useCallback(debounce((value) => {
-    console.log(`Searching for: ${value}`);
-    getSearch({ variables: { q: value, filter } });
+    if(value){
+      getSearch({ variables: { q: value, filter } });
+    }else{
+      setSearchResults([])
+      setIndividualResult({})
+      setFilter([])
+      setTherapeuticEffectsAndSymptomsHint([])
+    }
   }, 500), [getSearch, filter]);
 
   const handleSearch = (event) => {
@@ -60,6 +66,8 @@ const SearchInput = () => {
   useEffect(() => {
     if (data) {
       console.log(data)
+      setTherapeuticEffectsAndSymptomsHint(data.search.filter(item => item.group === "Efeitos terapêuticos" && !filter.includes(item.name)).map(item => item.name))
+      setSearchResults(data.search)
     }
   }, [data])
 
@@ -78,10 +86,18 @@ const SearchInput = () => {
       <div onMouseOver={() => setShowHintInfo(true)} onMouseLeave={() => setShowHintInfo(false)}>
 
         <div>
-          {filter.map(filterName => <button className="hint-box" onClick={() => setFilter(filter.filter(f => f !== filterName))}>{filterName}</button>)}
+          {filter.map(filterName => {
+            return <button className="hint-box" onClick={() => {
+              setFilter(filter.filter(f => f !== filterName))
+              setTherapeuticEffectsAndSymptomsHint(therapeuticEffectsAndSymptomsHint.filter(hint => hint !== filterName))
+            }}>{filterName}</button>
+          })}
         </div>
         <div>
-          {therapeuticEffectsAndSymptomsHint.map(hint => <button className="hint-box" onClick={() => setFilter([...filter, hint])}>{hint}</button>)}
+          {therapeuticEffectsAndSymptomsHint.map(hint => <button className="hint-box" onClick={() => {
+            setFilter([...filter, hint])
+            setTherapeuticEffectsAndSymptomsHint(therapeuticEffectsAndSymptomsHint.filter(hintName => hintName !== hint))
+          }}>{hint}</button>)}
         </div>
         {showHintInfo && <InfoTooltip><strong>Função fitocomplexo</strong>: selecione vários efeitos terapêuticos ou sintomas para uma melhor escolha da planta</InfoTooltip>}
       </div>

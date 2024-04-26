@@ -7,8 +7,8 @@ export default styled.div`
   flex-direction: column;
   align-items: flex-start;
   width: 90vw;
-    margin: 0 auto;
-    max-width: 720px;
+  margin: 0 auto;
+  max-width: 720px;
 
   > div:first-child {
     position: relative;
@@ -18,17 +18,17 @@ export default styled.div`
   > div:last-child {
     display: flex;
     flex-wrap: wrap;
-    
-    >div:first-child{
+
+    > div:first-child {
       position: relative;
 
-      button{
+      button {
         background-color: green;
         color: white;
       }
     }
 
-    button{
+    button {
       padding: 4px;
       border-radius: 8px;
       margin-right: 4px;
@@ -41,7 +41,7 @@ export default styled.div`
     position: absolute;
     top: 14px;
     left: 24px;
-    color: #ccc
+    color: #ccc;
   }
 
   input {
@@ -51,12 +51,13 @@ export default styled.div`
     padding: 16px 24px;
     width: 100%;
     margin-bottom: 16px;
-    
+
     &:hover {
       box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.5);
     }
-    
-    &:focus, &:active{
+
+    &:focus,
+    &:active {
       border: 1px solid ${({ theme }) => theme.colors.primary};
       box-shadow: 0 0 0 4px green;
       outline: none;
@@ -67,13 +68,16 @@ export default styled.div`
       opacity: 1; /* Firefox */
     }
   }
-
-  /* ${({showingResults}) => showingResults && `
-  input {
-    &::placeholder {
-      opacity: 0;
-    }
-  }`} */
+  
+  ${({ showingResults }) =>
+    showingResults &&
+    `
+    input {
+      &::placeholder {
+        color: transparent;
+        opacity: 0;
+      }
+    }`}
 `;
 
 export const WarningTooltip = styled.div`
