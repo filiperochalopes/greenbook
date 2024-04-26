@@ -57,7 +57,7 @@ export default styled.div`
     }
     
     &:focus, &:active{
-      border: 1px solid {({ theme }) => theme.colors.primary};
+      border: 1px solid ${({ theme }) => theme.colors.primary};
       box-shadow: 0 0 0 4px green;
       outline: none;
     }
@@ -67,6 +67,13 @@ export default styled.div`
       opacity: 1; /* Firefox */
     }
   }
+
+  /* ${({showingResults}) => showingResults && `
+  input {
+    &::placeholder {
+      opacity: 0;
+    }
+  }`} */
 `;
 
 export const WarningTooltip = styled.div`

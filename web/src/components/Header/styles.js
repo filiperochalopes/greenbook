@@ -10,4 +10,8 @@ export default styled.header`
     height: 100px;
     margin-bottom: 8px;
   }
+
+  ${({ showingResults }) => !showingResults && `
+    margin-top: calc(50vh - 210px);
+  `}
 `;

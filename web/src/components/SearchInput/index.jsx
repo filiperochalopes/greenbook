@@ -2,19 +2,23 @@ import { useEffect, useState, useContext } from "react"
 import Container, { InfoTooltip, WarningTooltip } from "./styles.js"
 import debounce from 'lodash.debounce';
 import AppContext from "src/services/context.js";
+import { useLazyQuery } from "@apollo/client";
+import { SEARCH } from "src/services/api.js";
 
 const SearchInput = () => {
   const [searchTerm, setSearchTerm] = useState(''),
+    [filter, setFilter] = useState([]),
     [showLabel, setShowLabel] = useState(false),
     [therapeuticEffectsAndSymptomsHint, setTherapeuticEffectsAndSymptomsHint] = useState([]),
     [showDisclaimer, setShowDisclaimer] = useState(false),
     [showHintInfo, setShowHintInfo] = useState(false),
-    { searchResults, setSearchResults, loading, setLoading } = useContext(AppContext);
+    { searchResults, setSearchResults, individualResult, setLoading } = useContext(AppContext),
+    [getSearch, {error, data, loading}] = useLazyQuery(SEARCH)
 
   const debouncedSearch = debounce((value) => {
     console.log(`Searching for: ${value}`);
-    // Perform your search or other operations here
-  }, 2000); // 300 milliseconds delay
+    getSearch({ variables: { q: value, filter } });
+  }, 500); 
 
   const handleSearch = (event) => {
     const { value } = event.target;
@@ -34,6 +38,10 @@ const SearchInput = () => {
     if (localStorage.getItem('disclaimer-verified') !== 'true') setShowDisclaimer(true)
   }
 
+  const handleBlur = () => {
+    if (!searchTerm && Boolean(searchResults.length || individualResult.title)) { setShowLabel(true) }
+  }
+
   useEffect(() => {
     // verifica se o disclaimer já foi verificado no localstorage
     if (localStorage.getItem('disclaimer-verified') === 'true') {
@@ -45,13 +53,13 @@ const SearchInput = () => {
   }, []);
 
   return (
-    <Container showingResults={searchResults.length}>
+    <Container showingResults={Boolean(searchResults.length || individualResult.title)}>
       <div>
         {showLabel && <label htmlFor="search">Pesquisar no <strong className="greenbook-logo">gr<span className="green">ee</span>enbook</strong></label>}
         <a
           id="disclaimer-tooltip"
         >
-          <input type="search" id="search" placeholder="digite para pesquisar um nome de planta, sintomas, metabólitos secundários..." value={searchTerm} onChange={handleSearch} onFocus={handleFocus} onBlur={() => { if (!searchTerm) { setShowLabel(true) } }} />
+          <input type="search" id="search" placeholder="digite para pesquisar um nome de planta, sintomas, metabólitos secundários..." value={searchTerm} onChange={handleSearch} onFocus={handleFocus} onBlur={handleBlur} />
         </a>
 
       </div>
@@ -59,16 +67,10 @@ const SearchInput = () => {
       <div onMouseOver={() => setShowHintInfo(true)} onMouseLeave={() => setShowHintInfo(false)}>
 
         <div>
-          {therapeuticEffectsAndSymptomsHint.map(hint => <button className="hint-box">{hint}</button>)}
-          <button className="hint-box">exemplo</button>
-          <button className="hint-box">exemplo</button>
-          <button className="hint-box">exemplo</button>
-          <button className="hint-box">exemplo</button>
+          {filter.map(filterName => <button className="hint-box">{filterName}</button>)}
         </div>
         <div>
-          <button className="hint-box">exemplo</button>
-          <button className="hint-box">exemplo</button>
-          <button className="hint-box">exemplo</button>
+         {therapeuticEffectsAndSymptomsHint.map(hint => <button className="hint-box">{hint}</button>)}
         </div>
         {showHintInfo &&<InfoTooltip><strong>Função fitocomplexo</strong>: selecione vários efeitos terapêuticos ou sintomas para uma melhor escolha da planta</InfoTooltip>}
       </div>
