@@ -28,6 +28,7 @@ function App() {
         }}>
         <GlobalStyle />
         <Header withLogo={Boolean(!searchResults.length)}/>
+        {loading && <p>Carregando...</p>}
         {Boolean(searchResults.length && !individualResult.title) && <SearchResult />}
         {Boolean(!searchResults.length && individualResult.title) && <Content />}
         <Footer withLogo={Boolean(searchResults.length)}/>

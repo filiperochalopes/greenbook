@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from "react"
+import { useEffect, useState, useContext, useCallback } from "react"
 import Container, { InfoTooltip, WarningTooltip } from "./styles.js"
 import debounce from 'lodash.debounce';
 import AppContext from "src/services/context.js";
@@ -13,19 +13,20 @@ const SearchInput = () => {
     [showDisclaimer, setShowDisclaimer] = useState(false),
     [showHintInfo, setShowHintInfo] = useState(false),
     { searchResults, setSearchResults, individualResult, setLoading } = useContext(AppContext),
-    [getSearch, {error, data, loading}] = useLazyQuery(SEARCH)
+    [getSearch, { error, data, loading }] = useLazyQuery(SEARCH)
 
-  const debouncedSearch = debounce((value) => {
+  // Debounced version of handleSearch function with a delay of 500ms
+  const debouncedHandleSearch = useCallback(debounce((value) => {
     console.log(`Searching for: ${value}`);
     getSearch({ variables: { q: value, filter } });
-  }, 500); 
+  }, 500), [getSearch, filter]);
 
   const handleSearch = (event) => {
     const { value } = event.target;
     setSearchTerm(value);
 
     // Call the debounced function with the input value
-    debouncedSearch(value);
+    debouncedHandleSearch(value);
   };
 
   const handleShowDisclaimerTooltip = (value) => {
@@ -48,9 +49,19 @@ const SearchInput = () => {
       setShowDisclaimer(false)
     }
     return () => {
-      debouncedSearch.cancel();
+      debouncedHandleSearch.cancel();
     };
   }, []);
+
+  useEffect(() => {
+    setLoading(loading)
+  }, [loading])
+
+  useEffect(() => {
+    if (data) {
+      console.log(data)
+    }
+  }, [data])
 
   return (
     <Container showingResults={Boolean(searchResults.length || individualResult.title)}>
@@ -67,12 +78,12 @@ const SearchInput = () => {
       <div onMouseOver={() => setShowHintInfo(true)} onMouseLeave={() => setShowHintInfo(false)}>
 
         <div>
-          {filter.map(filterName => <button className="hint-box">{filterName}</button>)}
+          {filter.map(filterName => <button className="hint-box" onClick={() => setFilter(filter.filter(f => f !== filterName))}>{filterName}</button>)}
         </div>
         <div>
-         {therapeuticEffectsAndSymptomsHint.map(hint => <button className="hint-box">{hint}</button>)}
+          {therapeuticEffectsAndSymptomsHint.map(hint => <button className="hint-box" onClick={() => setFilter([...filter, hint])}>{hint}</button>)}
         </div>
-        {showHintInfo &&<InfoTooltip><strong>Função fitocomplexo</strong>: selecione vários efeitos terapêuticos ou sintomas para uma melhor escolha da planta</InfoTooltip>}
+        {showHintInfo && <InfoTooltip><strong>Função fitocomplexo</strong>: selecione vários efeitos terapêuticos ou sintomas para uma melhor escolha da planta</InfoTooltip>}
       </div>
 
     </Container>

@@ -86,5 +86,21 @@ export default async (_, { q, filter }, ctx) => {
     q: `metabolito:${cur.id}`
   }], []))
 
+  // search therapeutic effects and add to results
+  const therapeuticEffects = await ctx.prisma.therapeuticEffect.findMany({
+    where: {
+      term: {
+        contains: q
+      }
+    },
+    take: 7
+  })
+
+  results = results.concat(therapeuticEffects.reduce((acc, cur) => [...acc, {
+    name: cur.term,
+    group: "Efeitos terapêuticos",
+    q: `efeito-terapeutico:${cur.id}`
+  }], []))
+
   return results;
 };
