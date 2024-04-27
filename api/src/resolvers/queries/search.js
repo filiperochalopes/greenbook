@@ -5,7 +5,8 @@ export default async (_, { q, filter }, ctx) => {
   let species = await ctx.prisma.specie.findMany({
     where: {
       name: {
-        contains: q
+        contains: q,
+        mode: "insensitive"
       }
     },
     include: {
@@ -35,6 +36,7 @@ export default async (_, { q, filter }, ctx) => {
     where: {
       name: {
         contains: q,
+        mode: "insensitive"
       },
     },
     include: {
@@ -75,7 +77,8 @@ export default async (_, { q, filter }, ctx) => {
   const secondaryMetabolismDerivatives = await ctx.prisma.secondaryMetabolismDerivatives.findMany({
     where: {
       name: {
-        contains: q
+        contains: q,
+        mode: "insensitive"
       }
     }, take: 7
   })
@@ -90,7 +93,8 @@ export default async (_, { q, filter }, ctx) => {
   const therapeuticEffects = await ctx.prisma.therapeuticEffect.findMany({
     where: {
       term: {
-        contains: q
+        contains: q,
+        mode: "insensitive"
       }
     },
     take: 7

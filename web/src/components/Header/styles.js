@@ -5,6 +5,7 @@ export default styled.header`
   padding: 0 16px;
   text-align: center;
   margin-top: 16px;
+  transition: all 0.5s;
 
   img{
     height: 100px;
