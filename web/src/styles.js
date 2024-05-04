@@ -1,5 +1,11 @@
 import { createGlobalStyle } from "styled-components";
 
+export const theme = {
+    colors:{
+      primary: "green"
+    }
+}
+
 export const GlobalStyle = createGlobalStyle`
   html{
     font-size: 16px;
@@ -12,7 +18,7 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   body {
-      background: white;
+      background: #F9EDDB;
   }
 
   h1,

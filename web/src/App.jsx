@@ -4,7 +4,7 @@ import Footer from './components/Footer'
 import SearchResult from './components/SearchResult'
 import Content from './components/Content'
 import AppContext from './services/context'
-import { GlobalStyle } from './styles'
+import { GlobalStyle, theme } from './styles'
 import { ThemeProvider } from 'styled-components'
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 
@@ -25,11 +25,7 @@ function App() {
   return (
     <AppContext.Provider value={{ searchResults, setSearchResults, individualResult, setIndividualResult, loading, setLoading }}>
       <ApolloProvider client={client}>
-        <ThemeProvider theme={{
-          colors:{
-            primary: "green"
-          }
-        }}>
+        <ThemeProvider theme={theme}}>
         <GlobalStyle />
         <Header withLogo={Boolean(!searchResults.length && !individualResult.title)}/>
         {loading && <p>Carregando...</p>}
