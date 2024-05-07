@@ -25,7 +25,7 @@ function App() {
   return (
     <AppContext.Provider value={{ searchResults, setSearchResults, individualResult, setIndividualResult, loading, setLoading }}>
       <ApolloProvider client={client}>
-        <ThemeProvider theme={theme}}>
+        <ThemeProvider theme={theme}>
         <GlobalStyle />
         <Header withLogo={Boolean(!searchResults.length && !individualResult.title)}/>
         {loading && <p>Carregando...</p>}

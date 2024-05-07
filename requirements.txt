@@ -1,4 +1,0 @@
-alembic
-uvicorn
-fastapi
-sqlalchemy

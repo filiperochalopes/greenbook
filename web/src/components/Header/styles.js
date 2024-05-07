@@ -2,7 +2,6 @@ import styled from "styled-components";
 
 export default styled.header`
   width: 100vw;
-  padding: 0 16px;
   text-align: center;
   margin-top: 16px;
   transition: all 0.5s;

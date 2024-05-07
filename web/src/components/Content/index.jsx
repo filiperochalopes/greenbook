@@ -60,7 +60,7 @@ const Content = () => {
         <i>Clique em uma das prescrições abaixo para copiar:</i>
         <ul>
         {r.prescriptionSuggestions.map((elem, index) => 
-        <li key={index}><button onClick={handleCopyToClipboard}>{elem.specie.name} ({elem.part.name}) {elem.dosage}</button>{elem.description && <p>{elem.description}</p>}</li>)}
+        <li key={index}><button onClick={handleCopyToClipboard}>{elem.specie.name} ({elem.part.name}) {elem.dosage}</button>{(elem.description || elem.quantity) && <p>{elem.quantity && <span>{elem.quantity}</span>}{elem.description && elem.quantity && <span> - </span>}{elem.description && <span>{elem.description}</span>}</p>}</li>)}
         </ul>
         </section>}
     </Article>

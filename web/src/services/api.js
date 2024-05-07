@@ -38,6 +38,7 @@ export const GET_ITEM = gql`
           name
         }
         dosage
+        quantity
         description
       }
     }

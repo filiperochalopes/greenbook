@@ -16,6 +16,7 @@ services:
       - "host.docker.internal:host-gateway"
     ports:
     - ${PRISMA_STUDIO_PORT}:5555
+    restart: unless-stopped
   nginx:
     build:
       context: .
