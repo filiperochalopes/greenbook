@@ -2,10 +2,15 @@ version: '3.8'
 
 services:
   app:
+    env_file: ../.env.development
     build: 
       context: .
-      dockerfile: Dockerfile
-
+      args:
+        DB_USER: ${DB_USER}
+        DB_PASS: ${DB_PASS}
+        DB_HOST: ${DB_HOST}
+        DB_NAME: ${DB_NAME}
+      
     volumes:
       - ../..:/workspaces:cached
       
@@ -26,7 +31,7 @@ services:
     environment:
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
-      POSTGRES_DB: greenbok
+      POSTGRES_DB: greenbook
 
     # Add "forwardPorts": ["5432"] to **devcontainer.json** to forward PostgreSQL locally.
     # (Adding the "ports" property to this file will not forward from a Codespace.)

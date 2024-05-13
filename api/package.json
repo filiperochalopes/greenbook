@@ -7,7 +7,8 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "start": "nodemon src/server.js"
+    "start": "nodemon src/server.js",
+    "data-migration:add-relevance-data": "node ./prisma/migrations/20240513141258_add_relevance_realationship_model/data-migration.cjs"
   },
   "devDependencies": {
     "prisma": "^5.10.2",

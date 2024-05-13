@@ -14,15 +14,16 @@ datasource db {
 }
 
 model Specie {
-  id                Int                              @id @default(autoincrement())
-  name              String
-  description       String                           @db.Text
-  createdAt         DateTime                         @default(now())
-  updatedAt         DateTime                         @updatedAt
-  prescriptions     PrescriptionSuggestion[]
-  popularNames      PopularName[]
-  therapeuticEffect TherapeuticEffect[]
-  metabolites       SecondaryMetabolismDerivatives[]
+  id                   Int                              @id @default(autoincrement())
+  name                 String
+  description          String                           @db.Text
+  createdAt            DateTime                         @default(now())
+  updatedAt            DateTime                         @updatedAt
+  prescriptions        PrescriptionSuggestion[]
+  popularNames         PopularName[]
+  therapeuticEffect    TherapeuticEffect[]
+  metabolites          SecondaryMetabolismDerivatives[]
+  metabolitesRelevance SpecieMetabolitesRelevance[]
 }
 
 model PopularName {
@@ -40,17 +41,38 @@ model PlantPart {
 }
 
 model TherapeuticEffect {
-  id       Int      @id @default(autoincrement())
-  term     String
-  meaning  String
+  id      Int      @id @default(autoincrement())
+  term    String
+  meaning String
   species Specie[]
 }
 
 model SecondaryMetabolismDerivatives {
-  id          Int      @id @default(autoincrement())
-  name        String
-  description String   @db.Text
-  species     Specie[]
+  id               Int                          @id @default(autoincrement())
+  name             String
+  description      String                       @db.Text
+  species          Specie[]
+  speciesRelevance SpecieMetabolitesRelevance[]
+}
+
+model Relevance {
+  level                      String                       @id
+  description                String
+  hexColor                   String
+  specieMetabolitesRelevance SpecieMetabolitesRelevance[]
+}
+
+model SpecieMetabolitesRelevance {
+  specie     Specie                         @relation(fields: [specieId], references: [id])
+  metabolite SecondaryMetabolismDerivatives @relation(fields: [metaboliteId], references: [id])
+  relevance  Relevance                      @relation(fields: [relevanceLevel], references: [level])
+
+  specieId       Int
+  metaboliteId   Int
+  relevanceLevel String
+
+  @@id([specieId, metaboliteId, relevanceLevel])
+  @@map("_SpecieMetabolitesRelevance")
 }
 
 model HerbalPreparation {
