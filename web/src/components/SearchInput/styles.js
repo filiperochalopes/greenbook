@@ -10,28 +10,25 @@ export default styled.div`
   margin: 0 auto;
   max-width: 720px;
 
+  small{
+      font-size: 0.8rem;
+      font-weight: lighter;
+      line-height: 13px;
+      display: block;
+      margin-bottom: 8px;
+    }
+
   > div:first-child {
     position: relative;
     width: 100%;
-  }
 
-  > div:last-child {
-    display: flex;
-    flex-wrap: wrap;
-
-    > div:first-child {
-      position: relative;
-
-      button {
-        background-color: green;
-        color: white;
-      }
-    }
-
-    button {
-      padding: 4px;
-      border-radius: 8px;
-      margin-right: 4px;
+    button{
+      display: block;
+      position: absolute;
+      right: 14px;
+      top: 14px;
+      background-color: transparent;
+      border: none;
       outline: none;
       cursor: pointer;
     }
@@ -68,7 +65,7 @@ export default styled.div`
       opacity: 1; /* Firefox */
     }
   }
-  
+
   ${({ showingResults }) =>
     showingResults &&
     `
@@ -78,6 +75,59 @@ export default styled.div`
         opacity: 0;
       }
     }`}
+
+  #filter {
+    text-align: left;
+    padding: 8px;
+    border: 1px solid ${({ theme }) => theme.colors.primary};
+    background: ${({ theme }) => theme.colors.ligthGreen};
+    border-radius: 8px;
+
+    h3 {
+      display: block;
+      font-size: 1rem;
+      margin-bottom: 8px;
+
+      button {
+        background-color: transparent;
+        border: none;
+        outline: none;
+        cursor: pointer;
+
+        svg {
+          height: 16px;
+        }
+      }
+    }
+
+    > div {
+      display: flex;
+      flex-wrap: wrap;
+
+
+        > div:first-child {
+          position: relative;
+
+          button {
+            background-color: green;
+            color: white;
+          }
+        }
+
+        > div:last-child {
+         display: contents;
+        }
+
+        button {
+          padding: 4px;
+          border-radius: 8px;
+          margin-right: 4px;
+          margin-top: 4px;
+          outline: none;
+          cursor: pointer;
+        }
+    }
+  }
 `;
 
 export const WarningTooltip = styled.div`
@@ -113,32 +163,5 @@ export const WarningTooltip = styled.div`
       background-color: white;
       color: #c64242;
     }
-  }
-`;
-
-export const InfoTooltip = styled.div`
-  background-color: green;
-  color: white;
-  font-size: 0.6rem;
-  width: 180px;
-  padding: 4px;
-  border-radius: 8px;
-  position: relative;
-  top: -8px;
-  margin-left: 8px;
-
-  strong {
-    font-weight: bold;
-  }
-
-  &::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    right: 100%;
-    margin-top: -5px;
-    border-width: 5px;
-    border-style: solid;
-    border-color: transparent green transparent transparent;
   }
 `;

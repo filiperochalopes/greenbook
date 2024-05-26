@@ -3,6 +3,7 @@ import { createGlobalStyle } from "styled-components";
 export const theme = {
   colors: {
     primary: "green",
+    ligthGreen: "#33c995",
   },
 };
 

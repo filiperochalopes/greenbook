@@ -33,7 +33,7 @@ function App() {
           {/* Mostra o resultado da busca */}
           {Boolean(searchResults.length && !individualResult.title) && <SearchResult />}
           {/* Mostra o conteúdo individual da seleção */}
-          {Boolean(!searchResults.length && !loading && searchTerm && !individualResult.title) && <center style={{opacity: 0.5}}>Não foram encontrados resultados para sua busca</center>}
+          {Boolean(!searchResults.length && !loading && searchTerm && !individualResult.title) && <center style={{opacity: 0.5, margin: '2rem 0'}}>Não foram encontrados resultados para sua busca</center>}
           {Boolean(!searchResults.length && individualResult.title) && <Content />}
           <Footer withLogo={Boolean(searchResults.length || individualResult.title)} />
         </ThemeProvider>
