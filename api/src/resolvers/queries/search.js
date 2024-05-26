@@ -4,10 +4,20 @@ export default async (_, { q, filter }, ctx) => {
   // filter specie and other models by query string q
   let species = await ctx.prisma.specie.findMany({
     where: {
-      name: {
-        contains: q,
-        mode: "insensitive"
-      }
+      OR: [
+        {
+          name: {
+            contains: q,
+            mode: "insensitive"
+          }
+        },
+        {
+          description: {
+            contains: q,
+            mode: "insensitive"
+          }
+        }
+      ]
     },
     include: {
       therapeuticEffect: true
