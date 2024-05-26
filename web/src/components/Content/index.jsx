@@ -49,9 +49,15 @@ const Content = () => {
       </section>}
       {Boolean(r.metabolites.length) && <section>
         <header>
-          <h2>Metabolitos</h2>
+          <h2>Metabólitos</h2>
         </header>
         {r.metabolites.map((elem) => <button onClick={() => handleItemClick(elem.q)} key={elem.name}>{elem.name}</button>)}
+        </section>}
+      {Boolean(r.therapeuticEffects?.length) && <section>
+        <header>
+          <h2>Efeitos terapêuticos</h2>
+        </header>
+        {r.therapeuticEffects.map((elem) => <button onClick={() => handleItemClick(elem.q)} key={elem.term}>{elem.term}</button>)}
         </section>}
       {Boolean(r.prescriptionSuggestions.length) && <section>
         <header>

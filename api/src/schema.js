@@ -23,14 +23,15 @@ export const schema = createSchema({
       description: String
       species: [Specie]
       popularNames: [PopularName]
-      metabolites: [secondaryMetabolismDerivatives]
+      metabolites: [SecondaryMetabolismDerivatives]
+      therapeuticEffects: [TherapeuticEffect]
       prescriptionSuggestions: [PrescriptionSuggestion]
     }
 
     type Specie {
       name: String
       description: String
-      therapeuticEffect: [String]
+      therapeuticEffects: [String]
       q: String
     }
 
@@ -40,7 +41,12 @@ export const schema = createSchema({
       q: String
     }
 
-    type secondaryMetabolismDerivatives {
+    type TherapeuticEffect{
+      term: String
+      meaning: String
+    }
+
+    type SecondaryMetabolismDerivatives {
       name: String
       description: String
       q: String

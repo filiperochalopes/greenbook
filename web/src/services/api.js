@@ -30,6 +30,10 @@ export const GET_ITEM = gql`
         description
         q
       }
+      therapeuticEffects{
+        term
+        meaning
+      }
       prescriptionSuggestions {
         specie {
           name

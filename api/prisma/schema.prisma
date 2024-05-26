@@ -21,7 +21,7 @@ model Specie {
   updatedAt            DateTime                         @updatedAt
   prescriptions        PrescriptionSuggestion[]
   popularNames         PopularName[]
-  therapeuticEffect    TherapeuticEffect[]
+  therapeuticEffects    TherapeuticEffect[]
   metabolites          SecondaryMetabolismDerivatives[]
   metabolitesRelevance SpecieMetabolitesRelevance[]
 }

@@ -20,7 +20,7 @@ export default async (_, { q, filter }, ctx) => {
       ]
     },
     include: {
-      therapeuticEffect: true
+      therapeuticEffects: true
     }
   })
 
@@ -28,7 +28,7 @@ export default async (_, { q, filter }, ctx) => {
   species = species.filter((specie) => {
     if (filter) {
       return filter.every((filterName) => {
-        return specie.therapeuticEffect.some((therapeuticEffect) => {
+        return specie.therapeuticEffects.some((therapeuticEffect) => {
           return filterName === therapeuticEffect.term
         })
       })
@@ -52,7 +52,7 @@ export default async (_, { q, filter }, ctx) => {
     include: {
       specie: {
         include: {
-          therapeuticEffect: true
+          therapeuticEffects: true
         },
       },
     },
@@ -62,7 +62,7 @@ export default async (_, { q, filter }, ctx) => {
   popularNames = popularNames.filter((popularName) => {
     if (filter) {
       return filter.every((filterName) => {
-        return popularName.specie[0]?.therapeuticEffect?.some((therapeuticEffect) => {
+        return popularName.specie[0]?.therapeuticEffects?.some((therapeuticEffect) => {
           return filterName === therapeuticEffect.term
         })
       })

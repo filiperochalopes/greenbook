@@ -19,6 +19,7 @@ id = parseInt(id);
       },
       include: {
         metabolites: true,
+        therapeuticEffects: true,
         popularNames: true,
         prescriptions: {
           include: {
@@ -37,6 +38,7 @@ id = parseInt(id);
       q: `nome-popular:${popularName.id}`,
     }))
     result.metabolites = specie.metabolites
+    result.therapeuticEffects = specie.therapeuticEffects
 
   }else if (modelType === "nome-popular") {
     const popularName = await ctx.prisma.popularName.findUnique({
@@ -71,5 +73,6 @@ id = parseInt(id);
       q: `especie:${specie.id}`,
     }))
   }
+  console.log(result)
   return result;
 };
