@@ -6,13 +6,13 @@ import { useLazyQuery } from "@apollo/client";
 import { SEARCH } from "src/services/api.js";
 
 const SearchInput = () => {
-  const [searchTerm, setSearchTerm] = useState(''),
+  const 
     [filter, setFilter] = useState([]),
     [showLabel, setShowLabel] = useState(false),
     [therapeuticEffectsAndSymptomsHint, setTherapeuticEffectsAndSymptomsHint] = useState([]),
     [showDisclaimer, setShowDisclaimer] = useState(false),
     [showHintInfo, setShowHintInfo] = useState(false),
-    { searchResults, setSearchResults, individualResult, setIndividualResult, setLoading } = useContext(AppContext),
+    { searchResults, setSearchResults, individualResult, setIndividualResult, setLoading, searchTerm, setSearchTerm } = useContext(AppContext),
     [getSearch, { error, data, loading }] = useLazyQuery(SEARCH)
 
   // Debounced version of handleSearch function with a delay of 500ms
@@ -53,6 +53,7 @@ const SearchInput = () => {
 
   useEffect(() => {
     setLoading(loading)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading])
 
   useEffect(() => {
@@ -61,12 +62,14 @@ const SearchInput = () => {
       setTherapeuticEffectsAndSymptomsHint(data.search.filter(item => item.group === "Efeitos terapêuticos" && !filter.includes(item.name)).map(item => item.name))
       setSearchResults(data.search)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data])
 
   useEffect(() => {
     if(filter.length){
       handleSearch(searchTerm)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filter])
 
   return (
@@ -85,7 +88,7 @@ const SearchInput = () => {
 
         <div>
           {filter.map(filterName => {
-            return <button className="hint-box" onClick={() => {
+            return <button key={filterName} className="hint-box" onClick={() => {
               setFilter(filter.filter(f => f !== filterName))
               setTherapeuticEffectsAndSymptomsHint(therapeuticEffectsAndSymptomsHint.filter(hint => hint !== filterName))
             }}>{filterName}</button>
@@ -98,7 +101,6 @@ const SearchInput = () => {
             setTherapeuticEffectsAndSymptomsHint(therapeuticEffectsAndSymptomsHint.filter(hintName => hintName !== hint))
           }}>{hint}</button>)}
         </div>
-        {showHintInfo && <InfoTooltip><strong>Função fitocomplexo</strong>: selecione vários efeitos terapêuticos ou sintomas para uma melhor escolha da planta</InfoTooltip>}
       </div>
 
     </Container>

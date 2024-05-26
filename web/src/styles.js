@@ -1,10 +1,10 @@
 import { createGlobalStyle } from "styled-components";
 
 export const theme = {
-    colors:{
-      primary: "green"
-    }
-}
+  colors: {
+    primary: "green",
+  },
+};
 
 export const GlobalStyle = createGlobalStyle`
   html{
@@ -46,6 +46,25 @@ export const GlobalStyle = createGlobalStyle`
       color: green;
     }
   }
+
+  .loading-bar {
+    height: 6px;
+    background-color: #333; /* Customize color as needed */
+    width: 0; /* Initial width is 0 */
+    animation: loading-bar-animate 2s linear infinite;
+}
+
+@keyframes loading-bar-animate {
+    0% {
+        width: 0;
+    }
+    50% {
+        width: 100%;
+    }
+    100% {
+        width: 0;
+    }
+}
 
   button{
     cursor: pointer;

@@ -11,7 +11,11 @@ export default styled.header`
     margin-bottom: 8px;
   }
 
-  ${({ showingResults }) => !showingResults && `
+  ${({ showingResults, loading }) => !showingResults && !loading && `
     margin-top: calc(50vh - 210px);
+  `}
+
+  ${({ loading }) => !loading && `
+    padding-top: 6px;
   `}
 `;

@@ -6,7 +6,7 @@ import { GET_ITEM } from "src/services/api.js";
 
 const SearchResult = () => {
   const { searchResults, setLoading, setSearchResults, setIndividualResult } = useContext(AppContext),
-    [getIndividualResult, { error, data, loading }] = useLazyQuery(GET_ITEM)
+    [getIndividualResult, { data, loading }] = useLazyQuery(GET_ITEM)
 
   const handleItemClick = (q) => {
     getIndividualResult({ variables: { q } });
@@ -14,6 +14,7 @@ const SearchResult = () => {
 
   useEffect(() => {
     setLoading(loading)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading])
 
   useEffect(() => {
@@ -21,6 +22,7 @@ const SearchResult = () => {
       setIndividualResult(data.getItem)
       setSearchResults([])
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data])
 
   useEffect(() => {
@@ -37,11 +39,11 @@ const SearchResult = () => {
         acc[group].push(obj);
         return acc;
       }, {})).map(group => (
-        <section>
+        <section key={group[0]}>
           <header><h1>{group[0]}</h1></header>
           <div>
             {group[1].map(item => (
-              <button className="result-box" onClick={() => handleItemClick(item.q)}>{item.name}</button>
+              <button key={item.q} className="result-box" onClick={() => handleItemClick(item.q)}>{item.name}</button>
             ))}
           </div>
         </section>

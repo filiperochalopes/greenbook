@@ -14,24 +14,28 @@ const client = new ApolloClient({
 });
 
 function App() {
-  const [searchResults, setSearchResults] = useState([])
-  const [individualResult, setIndividualResult] = useState({})
-  const [loading, setLoading] = useState(false)
+  const [searchResults, setSearchResults] = useState([]),
+    [searchTerm, setSearchTerm] = useState(''),
+    [individualResult, setIndividualResult] = useState({}),
+    [loading, setLoading] = useState(false)
 
   useEffect(() => {
     console.log(searchResults)
-  },[searchResults])
+  }, [searchResults])
 
   return (
-    <AppContext.Provider value={{ searchResults, setSearchResults, individualResult, setIndividualResult, loading, setLoading }}>
+    <AppContext.Provider value={{ searchResults, setSearchResults, individualResult, setIndividualResult, loading, setLoading, searchTerm, setSearchTerm }}>
       <ApolloProvider client={client}>
         <ThemeProvider theme={theme}>
-        <GlobalStyle />
-        <Header withLogo={Boolean(!searchResults.length && !individualResult.title)}/>
-        {loading && <p>Carregando...</p>}
-        {Boolean(searchResults.length && !individualResult.title) && <SearchResult />}
-        {Boolean(!searchResults.length && individualResult.title) && <Content />}
-        <Footer withLogo={Boolean(searchResults.length || individualResult.title)}/>
+          <GlobalStyle />
+          {loading && <div className="loading-bar"></div>}
+          <Header withLogo={Boolean(!searchResults.length && !individualResult.title && !loading)} />
+          {/* Mostra o resultado da busca */}
+          {Boolean(searchResults.length && !individualResult.title) && <SearchResult />}
+          {/* Mostra o conteúdo individual da seleção */}
+          {Boolean(!searchResults.length && !loading && searchTerm && !individualResult.title) && <center style={{opacity: 0.5}}>Não foram encontrados resultados para sua busca</center>}
+          {Boolean(!searchResults.length && individualResult.title) && <Content />}
+          <Footer withLogo={Boolean(searchResults.length || individualResult.title)} />
         </ThemeProvider>
       </ApolloProvider>
     </AppContext.Provider>

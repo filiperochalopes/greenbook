@@ -4,10 +4,10 @@ import SearchInput from "src/components/SearchInput"
 import AppContext from "src/services/context.js"
 import { useContext } from "react"
 const Header = ({ withLogo }) => {
-    const { searchResults, individualResult } = useContext(AppContext)
+    const { searchResults, individualResult, loading } = useContext(AppContext)
 
     return (
-        <StyledHeader showingResults={Boolean(searchResults.length || individualResult.title)}>
+        <StyledHeader showingResults={Boolean(searchResults.length || individualResult.title)} loading={loading}>
             {withLogo && <img src="/icon.png" alt="GreenBook Icon" />}
             <SearchInput />
         </StyledHeader>
