@@ -1,5 +1,5 @@
 import Article from "./styles.js"
-import { useContext, useEffect, useState } from "react"
+import { useContext, useEffect } from "react"
 import AppContext from "src/services/context.js"
 import { useLazyQuery } from "@apollo/client";
 import { GET_ITEM } from "src/services/api.js";

@@ -33,7 +33,7 @@ const SearchInput = () => {
     debouncedHandleSearch(value);
   };
 
-  const handleShowDisclaimerTooltip = (value) => {
+  const handleShowDisclaimerTooltip = () => {
     localStorage.setItem('disclaimer-verified', 'true')
     setShowDisclaimer(false)
   }

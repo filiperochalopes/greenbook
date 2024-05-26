@@ -6,7 +6,7 @@ import { GET_ITEM } from "src/services/api.js";
 
 const Content = () => {
   const { individualResult: r, setIndividualResult } = useContext(AppContext),
-    [getIndividualResult, { error, data, loading }] = useLazyQuery(GET_ITEM)
+    [getIndividualResult, { data }] = useLazyQuery(GET_ITEM)
 
   useEffect(() => {
     if (r) {
@@ -26,6 +26,7 @@ const Content = () => {
     if (data) {
       setIndividualResult(data.getItem)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data])
 
   return (
