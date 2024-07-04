@@ -7,6 +7,8 @@ import AppContext from './services/context'
 import { GlobalStyle, theme } from './styles'
 import { ThemeProvider } from 'styled-components'
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'
+import Edit from './views/Edit'
 
 const client = new ApolloClient({
   uri: 'https://greenbook.filipelopes.med.br/graphql',
@@ -28,7 +30,10 @@ function App() {
       <ApolloProvider client={client}>
         <ThemeProvider theme={theme}>
           <GlobalStyle />
-          {loading && <div className="loading-bar"></div>}
+          <Router>
+            <Routes>
+            <Route exact path="/" element={<>
+              {loading && <div className="loading-bar"></div>}
           <Header withLogo={Boolean(!searchResults.length && !individualResult.title && !loading)} />
           {/* Mostra o resultado da busca */}
           {Boolean(searchResults.length && !individualResult.title) && <SearchResult />}
@@ -36,6 +41,10 @@ function App() {
           {Boolean(!searchResults.length && !loading && searchTerm && !individualResult.title) && <center style={{opacity: 0.5, margin: '2rem 0'}}>Não foram encontrados resultados para sua busca</center>}
           {Boolean(!searchResults.length && individualResult.title) && <Content />}
           <Footer withLogo={Boolean(searchResults.length || individualResult.title)} />
+            </>} />
+            <Route exact path="/edit" element={<Edit/>} />
+            </Routes>
+          </Router>
         </ThemeProvider>
       </ApolloProvider>
     </AppContext.Provider>
