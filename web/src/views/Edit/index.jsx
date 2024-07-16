@@ -12,12 +12,25 @@ const EditForm = () => {
     return <article>
         <h2>Formulário de Edição</h2>
         <form onSubmit={formik.handleSubmit}>
+        <section>
+        <header>
+            <h2>Espécie</h2>
+            </header>
+            <Select
+             formik={forimk}
+             options={[]}
+             name="name"
+             />
             <Input
-                type="text"
-                name="specie.name"
+                type="textarea"
+                name="description"
                 formik={formik}
             />
-            <h3>Nomes Populares</h3>
+        </section>
+        <section>
+        <header>
+            <h2>Nomes Populares</h2>
+            </header>
             <Select
                 formik={formik}
                 name="popularNames"
@@ -25,7 +38,30 @@ const EditForm = () => {
                 creatable
                 isMulti
                 />
-                <h4>Descrições</h4>
+                <Input type="textarea" name="observation"/>
+        </section>
+        <section>
+        <header>
+            <h2>
+            Efeitos Terapêuticos
+            </h2>
+            </header>
+                </section>
+        <section>
+        <header>
+            <h2>
+            Metabólios Secundários
+            </h2>
+            <p>São os metabólitos cmo função terapêuticas identificados nos fitocomplexos</p>
+            </header>
+                </section>
+        <section>
+        <header>
+            <h2>
+            Efeitos Terapêuticos
+            </h2>
+            </header>
+                </section>
                 <h3>Metabólitos secundários</h3>
                 <h4>Sintomas relacionados</h4>
                 <h3>Efeitos Terapêuticos</h3>
