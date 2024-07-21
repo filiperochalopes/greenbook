@@ -1,11 +1,12 @@
 import Container from "./styles";
 
 import PropTypes from "prop-types";
-import React, { useRef } from "react";
+import { useRef } from "react";
 import ReactSelect from "react-select";
 import AsyncSelect from "react-select/async";
 import AsyncCreatableSelect from "react-select/async-creatable";
 import CreatableSelect from "react-select/creatable";
+
 const selectStyles = {
   container: (props) => ({
     ...props,

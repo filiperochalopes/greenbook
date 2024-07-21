@@ -1,7 +1,6 @@
 import InputContainer from "./styles";
 
 import PropTypes from "prop-types";
-import React from "react";
 
 const Input = ({
   type,
