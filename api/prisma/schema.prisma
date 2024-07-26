@@ -21,7 +21,7 @@ model Specie {
   updatedAt            DateTime                         @updatedAt
   prescriptions        PrescriptionSuggestion[]
   popularNames         PopularName[]
-  therapeuticEffects    TherapeuticEffect[]
+  therapeuticEffects   TherapeuticEffect[]
   metabolites          SecondaryMetabolismDerivatives[]
   metabolitesRelevance SpecieMetabolitesRelevance[]
 }
@@ -40,6 +40,7 @@ model PlantPart {
   prescriptions PrescriptionSuggestion[]
 }
 
+// todo os efeitos terapêuticos devem estar relacionados com os metabólitos, se possível, apesar de não ter evidências para todas as ligações ainda seria algo para se pensar
 model TherapeuticEffect {
   id      Int      @id @default(autoincrement())
   term    String

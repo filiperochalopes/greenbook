@@ -1,6 +1,8 @@
 import { createSchema } from 'graphql-yoga'
 import search from './resolvers/queries/search.js'
 import getItem from './resolvers/queries/getItem.js'
+import species from './resolvers/queries/species.js'
+import specie from './resolvers/queries/specie.js'
 
 export const schema = createSchema({
   typeDefs: /* GraphQL */ `
@@ -10,6 +12,10 @@ export const schema = createSchema({
       search(q:String!, filter:[String]): [SearchResult]
       "Retorna informações para apenas um item da busca, q deve estar no modelo objeto:id"
       getItem(q:String!): Item
+      "Retorna as espécies para formuláro de edição"
+      species: [Specie]
+      "Retorna uma únca espécie com todos seus atributos relevantes para preencher formuláro de edição"
+      specie(id: Int!): Specie
     }
 
     type SearchResult {
@@ -29,13 +35,19 @@ export const schema = createSchema({
     }
 
     type Specie {
+      id: Int
       name: String
       description: String
-      therapeuticEffects: [String]
+      popularNames: [PopularName]
+      metabolites: [SecondaryMetabolismDerivatives]
+      metabolitesRelevance: [SecondaryMetabolismDerivativesRelevance]
+      therapeuticEffects: [TherapeuticEffect]
+      prescriptions: [PrescriptionSuggestion]
       q: String
     }
 
     type PopularName {
+      id: Int
       name: String
       observation: String
       q: String
@@ -50,6 +62,18 @@ export const schema = createSchema({
       name: String
       description: String
       q: String
+    }
+
+    type SecondaryMetabolismDerivativesRelevance{
+      relevance: Relevance
+      specie: Specie
+      metabolite: SecondaryMetabolismDerivatives
+    }
+
+    type Relevance {
+      level: String
+      description: String
+      hexColor: String
     }
 
     type PrescriptionSuggestion{
@@ -70,7 +94,9 @@ export const schema = createSchema({
     Query: {
       hello: () => 'world',
       search,
-      getItem
+      getItem,
+      species,
+      specie
     }
   }
 })

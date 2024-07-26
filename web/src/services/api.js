@@ -48,3 +48,52 @@ export const GET_ITEM = gql`
     }
   }
 `;
+
+export const GET_SPECIES = gql`
+  query Species {
+    species {
+      id
+      name
+      description
+    }
+  }
+`;
+
+export const GET_SPECIE = gql`
+  query Specie($id: Int!) {
+  specie(id: $id) {
+    id
+    name
+    description
+    popularNames {
+      id
+      name
+      observation
+    }
+    metabolitesRelevance{
+      metabolite{
+        name
+        description
+      }
+      relevance{
+        level
+        description
+        hexColor
+      }
+    }
+    prescriptions{
+      part{
+        name
+        description
+      }
+      dosage
+      quantity
+      description
+    }
+    therapeuticEffects{
+      term
+      meaning
+    }
+  }
+}
+`;

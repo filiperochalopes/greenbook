@@ -14,7 +14,7 @@ export default styled.div`
     background: #f0f0f0;
     padding: 0.5rem 1rem;
     margin-bottom: 0.2rem;
-    border: 1px solid blue;
+    border: 1px solid green;
     box-sizing: border-box;
     height: 2rem;
     width: 100%;

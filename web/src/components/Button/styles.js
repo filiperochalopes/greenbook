@@ -3,7 +3,7 @@ import styled, { css } from "styled-components";
 export default styled.button`
   padding: 5px 10px;
   border-radius: 5px;
-  background-color: #0000ff;
+  background-color: #006e00;
   color: #fff;
   border: 3px groove #000;
   margin-bottom: 0.4rem;
@@ -12,7 +12,7 @@ export default styled.button`
   transition: background-color 0.3s;
 
   &:hover {
-    background-color: #4242ff;
+    background-color: #00ba00;
   }
 
   &:active {

@@ -26,7 +26,7 @@ const selectStyles = {
     ...props,
     background: "#f0f0f0",
     borderWidth: "1px",
-    borderColor: "#0000ff",
+    borderColor: "green",
     borderRadius: "5px",
     minHeight: "2rem",
     height: "2rem",
