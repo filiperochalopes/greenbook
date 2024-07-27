@@ -20,7 +20,7 @@ export const schema = createSchema({
       "Retorna uma únca espécie com todos seus atributos relevantes para preencher formuláro de edição"
       specie(id: Int!): Specie
       "Retorna todos os metabólitos que temos até agora"
-      metabolites: [SecondaryMetabolismDerivativesRelevance]
+      metabolites: [SecondaryMetabolismDerivatives]
       "Nomes populares do banco de dados"
       popularNames: [PopularName]
       "Efeitos terápeuticos do banco de dados"
@@ -64,11 +64,13 @@ export const schema = createSchema({
     }
 
     type TherapeuticEffect{
+      id: Int
       term: String
       meaning: String
     }
 
     type SecondaryMetabolismDerivatives {
+      id: Int
       name: String
       description: String
       q: String

@@ -107,3 +107,23 @@ export const GET_POPULAR_NAMES = gql`
     }
   }
 `;
+
+export const GET_THERAPEUTIC_EFFECTS = gql`
+  query TherapeuticEffects {
+    therapeuticEffects {
+      id
+      term
+      meaning
+    }
+  }
+`;
+
+export const GET_METABOLITES = gql`
+  query Metabolites {
+    metabolites {
+      id
+      name
+      description
+    }
+  }
+`;

@@ -1,7 +1,7 @@
 export default async (_, __, ctx) => {
-  const therapeuticEffects = await ctx.prisma.therapeuticEffects.findMany({
+  const therapeuticEffects = await ctx.prisma.therapeuticEffect.findMany({
     orderBy: {
-      name: 'asc'
+      term: 'asc'
     }
   });
   return therapeuticEffects;
