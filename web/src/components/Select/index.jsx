@@ -66,18 +66,6 @@ const Select = ({
       : async
       ? AsyncSelect
       : ReactSelect;
-  let processedOptions = useRef([]);
-  if (options.length) {
-    // Verificando se o array é simples composto de strings ou de objetos, no primeiro duplicamos o valor para value e label
-    if (typeof options[0] === "string") {
-      processedOptions = options.map((e) => ({
-        value: e,
-        label: e,
-      }));
-    } else {
-      processedOptions = options;
-    }
-  }
   return (
     <Container>
       <label to={name}>
@@ -92,8 +80,8 @@ const Select = ({
         styles={selectStyles}
         id={name}
         name={name}
-        options={!async && processedOptions}
-        loadOptions={async && processedOptions}
+        options={!async && options}
+        loadOptions={async && options}
         cacheOptions={async && true}
         defaultOptions={async && true}
         formatCreateLabel={(inputValue) =>
@@ -117,28 +105,18 @@ const Select = ({
             formik.setFieldTouched(name, true, true);
           })
         }
-        value={
-          Array.isArray(processedOptions)
-            ? Array.isArray(formik.values[name])
-              ? processedOptions.filter((e) =>
-                  formik.values[name].some((el) => e.value.includes(el))
-                )
-              : processedOptions.filter((e) => {
-                  return e.value === formik.values[name];
-                })
-              ? processedOptions.filter((e) => {
-                  return e.value === formik.values[name];
-                })
-              : { value: formik.values[name], label: formik.values[name] }
-            : formik.values[name]
-        }
+        value={formik.values[name]}
         onChange={(e) => {
           if (onChange) onChange(e);
-          let value = e.value;
-          if (Array.isArray(e))
-            value = e.reduce((acc, cur) => [cur.value, ...acc], []);
-          if (!Array.isArray(processedOptions)) value = e;
-          formik.setFieldValue(name, value);
+          if(Array.isArray(e)) {
+            // caso seja uma lista é porque pode várias opções
+            // caso o último elemento do array tenha o value como string transformar em objeto
+            if(e[e.length - 1].value) e[e.length - 1] = {...e[e.length - 1], value: {name: e[e.length - 1].value}};
+            formik.setFieldValue(name, e.reduce((acc, curr) => [...acc, curr ], []));
+          }else{
+            // Apenas uma opção, ou seja, isMulti é falso
+            formik.setFieldValue(name, e);
+          }
           formik.setFieldTouched(name, true, true);
         }}
         onBlur={(e) => {

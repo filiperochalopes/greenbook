@@ -10,7 +10,6 @@ const Input = ({
   description,
   formik,
   required,
-  multiline,
   onBlur,
   onChange,
   onFocus,
@@ -21,7 +20,7 @@ const Input = ({
       {label || placeholder} {required && <span>*</span>}
     </label>
     {description && <p>{description}</p>}
-    {!multiline ? (
+    {type !== "textarea" ? (
       <input
         type={type}
         name={name}
@@ -55,6 +54,7 @@ const Input = ({
         }}
         onFocus={onFocus}
         required={required}
+        value={formik?.values[name]}
       >
         {formik?.values[name]}
       </textarea>
@@ -70,7 +70,6 @@ Input.propTypes = {
   type: PropTypes.string,
   label: PropTypes.string,
   required: PropTypes.bool,
-  multiline: PropTypes.bool,
   disabled: PropTypes.bool,
   description: PropTypes.string,
   placeholder: PropTypes.string,
@@ -84,7 +83,6 @@ Input.defaultProps = {
   type: "text",
   placeholder: "Digite seu texto aqui",
   required: false,
-  multiline: false,
   disabled: false,
 };
 

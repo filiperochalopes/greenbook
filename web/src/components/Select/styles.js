@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export default styled.div`
-  max-width: 200px;
+  max-width: 400px;
   margin-right: 4px;
 
   p {

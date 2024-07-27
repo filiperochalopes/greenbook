@@ -4,42 +4,47 @@ import Button from "src/components/Button"
 import Article from "./styles"
 
 import { useQuery, useLazyQuery } from "@apollo/client"
-import { GET_SPECIES, GET_SPECIE } from "src/services/api"
+import { GET_SPECIES, GET_SPECIE, GET_POPULAR_NAMES } from "src/services/api"
 
 import { useFormik } from "formik"
 import { useEffect, useState } from "react"
 
 const EditForm = () => {
   const {data:speciesData, loading:loadingSpecies} = useQuery(GET_SPECIES),
+  {data:popularNamesData} = useQuery(GET_POPULAR_NAMES),
   [specieId, setSpecieId] = useState(null),
+  [popularNames, setPopularNames] = useState(null),
+  [therapeuticEffects, setTheraputicEffects] = useState(null),
+  [metabolites, setMetabolites] = useState(null),
     [getSpecie, {data:specieData}] = useLazyQuery(GET_SPECIE),
     [specie, setSpecie] = useState({}),
   formik = useFormik({
-    initialValues: {},
+    initialValues: {
+    },
     onSubmit: (values) => {
       console.log(values)
     }
   })
 
   useEffect(() => {
-    if (speciesData) {
-      console.log(speciesData)
-    }
-  }, [speciesData])
-
-  useEffect(() => {
-    if (specieId !== formik.values.specieId) {
-      setSpecieId(formik.values.specieId)
-      getSpecie({variables: {id: formik.values.specieId}})
+    if (specieId !== formik.values.specie?.value) {
+      setSpecieId(formik.values.specie?.value)
+      getSpecie({variables: {id: formik.values.specie?.value}})
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [formik.values.specieId])
+  }, [formik.values.specie])
 
   useEffect(() => {
     if (specieData) {
+      formik.setFieldValue("description", specieData.specie.description, true)
+      formik.setFieldTouched("description", true)
       console.log(specieData.specie)
-      setSpecie(specieData.specie)
+      // cadastra os nomes populares
+      formik.setFieldValue("popularNames", specieData.specie.popularNames.map((popularName) => ({label: popularName.name, value: popularName})), true)
+      // cadastra os efeitos terapeuticos
+      // cadastra os metabólitos
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [specieData])
 
   return <Article>
@@ -52,12 +57,13 @@ const EditForm = () => {
         <Select
           formik={formik}
           options={speciesData ? speciesData.species.map((specie) => ({label: specie.name, value: specie.id})) : []}
-          name="specieId"
+          name="specie"
           loading={loadingSpecies}
         />
         <Input
           type="textarea"
           name="description"
+          label="Descrição"
           formik={formik}
         />
       </section>
@@ -68,16 +74,18 @@ const EditForm = () => {
         <Select
           formik={formik}
           name="popularNames"
-          options={[]}
+          options={popularNamesData ? popularNamesData.popularNames?.map((popularName) => ({label: popularName.name, value: {id: popularName.id, name: popularName.name, observation: popularName.observation}})) : []}
           creatable
           isMulti
         />
-        {specie.popularNames?.map((popularName) => (
+        {formik.values.popularNames?.map((popularName, i) => (
           <>
-          <h3>{popularName.name}</h3>
+          <h3>{popularName.value.name || popularName.value}</h3>
+          <input type="text" value={popularName.value.id} />
           <Input
             type="textarea"
-            name="popularName"
+            name={`popularNames.${i}.value.observation`}
+            label="Observações"
             formik={formik}
           />
           </>

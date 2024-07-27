@@ -97,3 +97,13 @@ export const GET_SPECIE = gql`
   }
 }
 `;
+
+export const GET_POPULAR_NAMES = gql`
+  query PopularNames {
+    popularNames {
+      id
+      name
+      observation
+    }
+  }
+`;

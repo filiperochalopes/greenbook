@@ -3,6 +3,9 @@ import search from './resolvers/queries/search.js'
 import getItem from './resolvers/queries/getItem.js'
 import species from './resolvers/queries/species.js'
 import specie from './resolvers/queries/specie.js'
+import metabolites from './resolvers/queries/metabolites.js'
+import popularNames from './resolvers/queries/popularNames.js'
+import therapeuticEffects from './resolvers/queries/therapeuticEffects.js'
 
 export const schema = createSchema({
   typeDefs: /* GraphQL */ `
@@ -16,6 +19,13 @@ export const schema = createSchema({
       species: [Specie]
       "Retorna uma únca espécie com todos seus atributos relevantes para preencher formuláro de edição"
       specie(id: Int!): Specie
+      "Retorna todos os metabólitos que temos até agora"
+      metabolites: [SecondaryMetabolismDerivativesRelevance]
+      "Nomes populares do banco de dados"
+      popularNames: [PopularName]
+      "Efeitos terápeuticos do banco de dados"
+      therapeuticEffects: [TherapeuticEffect]
+      
     }
 
     type SearchResult {
@@ -96,7 +106,10 @@ export const schema = createSchema({
       search,
       getItem,
       species,
-      specie
+      specie,
+      metabolites,
+      popularNames,
+      therapeuticEffects
     }
   }
 })
