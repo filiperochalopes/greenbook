@@ -91,6 +91,7 @@ export const GET_SPECIE = gql`
       description
     }
     therapeuticEffects{
+      id
       term
       meaning
     }
@@ -124,6 +125,16 @@ export const GET_METABOLITES = gql`
       id
       name
       description
+    }
+  }
+`;
+
+export const GET_RELEVANCE = gql`
+  query Relevance {
+    relevance {
+      level
+      description
+      hexColor
     }
   }
 `;

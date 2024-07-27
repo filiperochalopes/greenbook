@@ -25,8 +25,11 @@ export default styled.div`
   }
 
   textarea {
-    min-height: 120px;
-    width: 400px;
+    resize: both;
+    height: auto;
+    width: auto;
+    min-width: 400px;
+    min-height: 100px;
   }
 
   p {

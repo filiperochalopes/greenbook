@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export default styled.div`
-  max-width: 400px;
+display: inline-block;
   margin-right: 4px;
 
   p {

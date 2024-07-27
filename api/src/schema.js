@@ -6,6 +6,7 @@ import specie from './resolvers/queries/specie.js'
 import metabolites from './resolvers/queries/metabolites.js'
 import popularNames from './resolvers/queries/popularNames.js'
 import therapeuticEffects from './resolvers/queries/therapeuticEffects.js'
+import relevance from './resolvers/queries/relevance.js'
 
 export const schema = createSchema({
   typeDefs: /* GraphQL */ `
@@ -25,7 +26,8 @@ export const schema = createSchema({
       popularNames: [PopularName]
       "Efeitos terápeuticos do banco de dados"
       therapeuticEffects: [TherapeuticEffect]
-      
+      "Lista de relevancias disponível para formulário de edição"
+      relevance: [Relevance]
     }
 
     type SearchResult {
@@ -111,7 +113,8 @@ export const schema = createSchema({
       specie,
       metabolites,
       popularNames,
-      therapeuticEffects
+      therapeuticEffects,
+      relevance
     }
   }
 })

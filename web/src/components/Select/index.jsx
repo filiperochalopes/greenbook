@@ -56,6 +56,7 @@ const Select = ({
   onCreateOption,
   disabled,
   menuIsOpen,
+  components,
 }) => {
   const SelectComponent =
     creatable && !async
@@ -65,6 +66,7 @@ const Select = ({
       : async
       ? AsyncSelect
       : ReactSelect;
+
   return (
     <Container>
       <label to={name}>
@@ -82,6 +84,7 @@ const Select = ({
         options={!async && options}
         loadOptions={async && options}
         cacheOptions={async && true}
+        components={components}
         defaultOptions={async && true}
         formatCreateLabel={(inputValue) =>
           `Clique para Adicionar "${inputValue}"`
@@ -152,6 +155,7 @@ Select.propTypes = {
   placeholder: PropTypes.string,
   onChange: PropTypes.func,
   onBlur: PropTypes.func,
+  components: PropTypes.object
 };
 
 Select.defaultProps = {
@@ -162,6 +166,7 @@ Select.defaultProps = {
   async: false,
   disabled: false,
   menuIsOpen: false,
+  components: {},
   options: [],
 };
 

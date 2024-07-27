@@ -1,5 +1,4 @@
 import InputContainer from "./styles";
-
 import PropTypes from "prop-types";
 
 const Input = ({
@@ -14,7 +13,12 @@ const Input = ({
   onChange,
   onFocus,
   disabled,
-}) => (
+}) => {
+  // Extrair valor aninhado de formik.values
+  const getValue = (obj, path) => path.split('.').reduce((acc, part) => acc && acc[part], obj);
+  const value = getValue(formik.values, name);
+
+  return (
   <InputContainer>
     <label to={name}>
       {label || placeholder} {required && <span>*</span>}
@@ -54,9 +58,9 @@ const Input = ({
         }}
         onFocus={onFocus}
         required={required}
-        value={formik?.values[name]}
+        value={value}
       >
-        {formik?.values[name]}
+        {value}
       </textarea>
     )}
     {formik?.errors[name] && formik.touched[name] && (
@@ -64,6 +68,7 @@ const Input = ({
     )}
   </InputContainer>
 );
+}
 
 Input.propTypes = {
   name: PropTypes.string.isRequired,
