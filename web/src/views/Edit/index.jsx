@@ -58,6 +58,37 @@ const EditForm = () => {
       );
       formik.setFieldTouched("therapeuticEffects", true);
       // cadastra os metabólitos
+      console.log(specieData.specie);
+      const combinedMetabolites = {};
+
+// Adiciona metabolitos da specieData
+specieData.specie.metabolites.forEach(metabolite => {
+  combinedMetabolites[metabolite.name] = {
+    ...metabolite,
+    relevance: null
+  };
+});
+
+// Adiciona ou atualiza metabolitos com relevância
+specieData.specie.metabolitesRelevance.forEach(metaboliteRelevance => {
+  combinedMetabolites[metaboliteRelevance.metabolite.name] = {
+    ...metaboliteRelevance.metabolite,
+    relevance: {
+      label: relevanceMap[metaboliteRelevance.relevance.level],
+      value: metaboliteRelevance.relevance
+    }
+  };
+});
+
+// Converte o objeto combinado em uma array
+const finalMetabolitesArray = Object.keys(combinedMetabolites).map(name => ({
+  label: name,
+  value: combinedMetabolites[name]
+}));
+
+formik.setFieldValue("metabolites", finalMetabolitesArray, true);
+
+      formik.setFieldTouched("metabolites", true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [specieData]);
@@ -74,12 +105,12 @@ const EditForm = () => {
     children,
     ...props
   }) => {
-    console.log(props)
     return (
-    <StyledControl color={props.data.value.hexColor}>
-    <components.SingleValue {...props}>{children}</components.SingleValue>
-    </StyledControl>
-  );}
+      <StyledControl color={props.data.value.hexColor}>
+        <components.SingleValue {...props}>{children}</components.SingleValue>
+      </StyledControl>
+    );
+  }
 
   return (
     <Article>
@@ -144,14 +175,14 @@ const EditForm = () => {
                 label="Definição"
                 formik={formik}
               />
-            <Select
-              formik={formik}
-              name={`therapeuticEffects.${i}.value.relevance`}
-              components={{ Option, SingleValue }}
-              label="Relevância"
-              options={relevanceData && relevanceData.relevance.map((relevance) => ({
-                label: relevanceMap[relevance.level], value: relevance
-              }))}
+              <Select
+                formik={formik}
+                name={`therapeuticEffects.${i}.value.relevance`}
+                components={{ Option, SingleValue }}
+                label="Relevância"
+                options={relevanceData && relevanceData.relevance.map((relevance) => ({
+                  label: relevanceMap[relevance.level], value: relevance
+                }))}
               />
             </div>
           ))}
@@ -167,6 +198,26 @@ const EditForm = () => {
             options={metabolitesData ? metabolitesData.metabolites.map((metabolite) => ({ label: metabolite.name, value: { id: metabolite.id, name: metabolite.name, description: metabolite.description } })) : []}
             isMulti
           />
+          {formik.values.metabolites?.map((metabolite, i) => (
+            <div key={i}>
+              <h3>{metabolite.value.name}</h3>
+              <Input
+                type="textarea"
+                name={`metabolites.${i}.value.description`}
+                label="Descrição"
+                formik={formik}
+              />
+              <Select
+                formik={formik}
+                name={`metabolites.${i}.value.relevance`}
+                components={{ Option, SingleValue }}
+                label="Relevância"
+                options={relevanceData && relevanceData.relevance.map((relevance) => ({
+                  label: relevanceMap[relevance.level], value: relevance
+                }))}
+              />
+            </div>
+          ))}
         </section>
         <section>
           <header>

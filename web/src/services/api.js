@@ -70,6 +70,10 @@ export const GET_SPECIE = gql`
       name
       observation
     }
+    metabolites{
+      name
+      description
+    }
     metabolitesRelevance{
       metabolite{
         name
@@ -77,7 +81,6 @@ export const GET_SPECIE = gql`
       }
       relevance{
         level
-        description
         hexColor
       }
     }

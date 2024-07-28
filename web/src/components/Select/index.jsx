@@ -67,6 +67,10 @@ const Select = ({
       ? AsyncSelect
       : ReactSelect;
 
+  // Extrair valor aninhado de formik.values
+  const getValue = (obj, path) => path.split('.').reduce((acc, part) => acc && acc[part], obj);
+  const value = getValue(formik.values, name);
+
   return (
     <Container>
       <label to={name}>
@@ -107,7 +111,7 @@ const Select = ({
             formik.setFieldTouched(name, true, true);
           })
         }
-        value={formik.values[name]}
+        value={value}
         onChange={(e) => {
           if (onChange) onChange(e);
           if(Array.isArray(e)) {
