@@ -14,16 +14,17 @@ datasource db {
 }
 
 model Specie {
-  id                   Int                              @id @default(autoincrement())
-  name                 String
-  description          String                           @db.Text
-  createdAt            DateTime                         @default(now())
-  updatedAt            DateTime                         @updatedAt
-  prescriptions        PrescriptionSuggestion[]
-  popularNames         PopularName[]
-  therapeuticEffects   TherapeuticEffect[]
-  metabolites          SecondaryMetabolismDerivatives[]
-  metabolitesRelevance SpecieMetabolitesRelevance[]
+  id                          Int                                 @id @default(autoincrement())
+  name                        String
+  description                 String                              @db.Text
+  createdAt                   DateTime                            @default(now())
+  updatedAt                   DateTime                            @updatedAt
+  prescriptions               PrescriptionSuggestion[]
+  popularNames                PopularName[]
+  therapeuticEffects          TherapeuticEffect[]
+  therapeuticEffectsRelevance SpecieTherapeuticEffectsRelevance[]
+  metabolites                 SecondaryMetabolismDerivatives[]
+  metabolitesRelevance        SpecieMetabolitesRelevance[]
 }
 
 model PopularName {
@@ -42,10 +43,11 @@ model PlantPart {
 
 // todo os efeitos terapêuticos devem estar relacionados com os metabólitos, se possível, apesar de não ter evidências para todas as ligações ainda seria algo para se pensar
 model TherapeuticEffect {
-  id      Int      @id @default(autoincrement())
-  term    String
-  meaning String
-  species Specie[]
+  id               Int                                 @id @default(autoincrement())
+  term             String
+  meaning          String
+  species          Specie[]
+  speciesRelevance SpecieTherapeuticEffectsRelevance[]
 }
 
 model SecondaryMetabolismDerivatives {
@@ -57,10 +59,11 @@ model SecondaryMetabolismDerivatives {
 }
 
 model Relevance {
-  level                      String                       @id
-  description                String
-  hexColor                   String
-  specieMetabolitesRelevance SpecieMetabolitesRelevance[]
+  level                            String                              @id
+  description                      String
+  hexColor                         String
+  specieMetabolitesRelevance       SpecieMetabolitesRelevance[]
+  specieTherapeuticEffectRelevance SpecieTherapeuticEffectsRelevance[]
 }
 
 model SpecieMetabolitesRelevance {
@@ -74,6 +77,19 @@ model SpecieMetabolitesRelevance {
 
   @@id([specieId, metaboliteId, relevanceLevel])
   @@map("_SpecieMetabolitesRelevance")
+}
+
+model SpecieTherapeuticEffectsRelevance {
+  specie            Specie            @relation(fields: [specieId], references: [id])
+  therapeuticEffect TherapeuticEffect @relation(fields: [therapeuticEffectId], references: [id])
+  relevance         Relevance         @relation(fields: [relevanceLevel], references: [level])
+
+  specieId            Int
+  therapeuticEffectId Int
+  relevanceLevel      String
+
+  @@id([specieId, therapeuticEffectId, relevanceLevel])
+  @@map("_SpecieTherapeuticEffectsRelevance")
 }
 
 model HerbalPreparation {

@@ -54,6 +54,7 @@ const Select = ({
   isMulti,
   isOptionDisabled,
   onCreateOption,
+  onCreateTerm,
   disabled,
   menuIsOpen,
   components,
@@ -113,11 +114,15 @@ const Select = ({
         }
         value={value}
         onChange={(e) => {
+          console.log(e)
           if (onChange) onChange(e);
           if(Array.isArray(e)) {
             // caso seja uma lista é porque pode várias opções
             // caso o último elemento do array tenha o value como string transformar em objeto
-            if(e[e.length - 1].value) e[e.length - 1] = {...e[e.length - 1], value: {name: e[e.length - 1].value}};
+            console.log(e[e.length - 1]);
+            console.log(typeof e[e.length - 1].value === 'string');
+            if(typeof e[e.length - 1].value === 'string') 
+              e[e.length - 1] = {...e[e.length - 1], value: {[onCreateTerm]: e[e.length - 1].value}};
             formik.setFieldValue(name, e.reduce((acc, curr) => [...acc, curr ], []));
           }else{
             // Apenas uma opção, ou seja, isMulti é falso
@@ -155,6 +160,7 @@ Select.propTypes = {
   options: PropTypes.oneOfType([PropTypes.array, PropTypes.func]),
   isOptionDisabled: PropTypes.func,
   onCreateOption: PropTypes.func,
+  onCreateTerm: PropTypes.string,
   description: PropTypes.string || PropTypes.node,
   placeholder: PropTypes.string,
   onChange: PropTypes.func,
@@ -166,6 +172,7 @@ Select.defaultProps = {
   placeholder: "Selecione um item",
   required: false,
   creatable: false,
+  onCreateTerm: "name",
   isMulti: false,
   async: false,
   disabled: false,

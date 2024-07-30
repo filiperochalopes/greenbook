@@ -3,8 +3,8 @@ import Select from "src/components/Select";
 import Button from "src/components/Button";
 import Article, { StyledOption, StyledControl } from "./styles";
 
-import { useQuery, useLazyQuery } from "@apollo/client";
-import { GET_SPECIES, GET_SPECIE, GET_POPULAR_NAMES, GET_THERAPEUTIC_EFFECTS, GET_METABOLITES, GET_RELEVANCE } from "src/services/api";
+import { useQuery, useLazyQuery, useMutation } from "@apollo/client";
+import { GET_SPECIES, GET_SPECIE, GET_POPULAR_NAMES, GET_THERAPEUTIC_EFFECTS, GET_METABOLITES, GET_RELEVANCE, UPDATE_SPECIE } from "src/services/api";
 
 import { useFormik } from "formik";
 import { useEffect, useState } from "react";
@@ -16,6 +16,7 @@ const EditForm = () => {
     { data: therapeuticEffectsData } = useQuery(GET_THERAPEUTIC_EFFECTS),
     { data: metabolitesData } = useQuery(GET_METABOLITES),
     { data: relevanceData } = useQuery(GET_RELEVANCE),
+    [updateSpecie, { loading: updateSpecieLoading }] = useMutation(UPDATE_SPECIE),
     [specieId, setSpecieId] = useState(null),
     [getSpecie, { data: specieData }] = useLazyQuery(GET_SPECIE),
     relevanceMap = {
@@ -26,7 +27,15 @@ const EditForm = () => {
     formik = useFormik({
       initialValues: {},
       onSubmit: (values) => {
-        console.log(values);
+        let data = {
+          name: values.name,
+          description: values.description,
+          popularNames: values.popularNames.map(({ value: p }) => ({ id: p.id, name: p.name, observation: p.observation })),
+          therapeuticEffects: values.therapeuticEffects.map(({ value: t }) => ({ id: t.id, term: t.term, meaning: t.meaning, relevance: t.relevance?.value?.level })),
+          metabolites: values.metabolites.map(({ value: m }) => ({ id: m.id, name: m.name, description: m.description, relevance: m.relevance?.value?.level }))
+        }
+        console.log(data)
+        updateSpecie({ variables: { id: specieId, ...data } });
       }
     });
 
@@ -40,6 +49,8 @@ const EditForm = () => {
 
   useEffect(() => {
     if (specieData) {
+      formik.setFieldValue("name", specieData.specie.name, true);
+      formik.setFieldTouched("name", true);
       formik.setFieldValue("description", specieData.specie.description, true);
       formik.setFieldTouched("description", true);
       console.log(specieData.specie);
@@ -61,32 +72,32 @@ const EditForm = () => {
       console.log(specieData.specie);
       const combinedMetabolites = {};
 
-// Adiciona metabolitos da specieData
-specieData.specie.metabolites.forEach(metabolite => {
-  combinedMetabolites[metabolite.name] = {
-    ...metabolite,
-    relevance: null
-  };
-});
+      // Adiciona metabolitos da specieData
+      specieData.specie.metabolites.forEach(metabolite => {
+        combinedMetabolites[metabolite.name] = {
+          ...metabolite,
+          relevance: null
+        };
+      });
 
-// Adiciona ou atualiza metabolitos com relevância
-specieData.specie.metabolitesRelevance.forEach(metaboliteRelevance => {
-  combinedMetabolites[metaboliteRelevance.metabolite.name] = {
-    ...metaboliteRelevance.metabolite,
-    relevance: {
-      label: relevanceMap[metaboliteRelevance.relevance.level],
-      value: metaboliteRelevance.relevance
-    }
-  };
-});
+      // Adiciona ou atualiza metabolitos com relevância
+      specieData.specie.metabolitesRelevance.forEach(metaboliteRelevance => {
+        combinedMetabolites[metaboliteRelevance.metabolite.name] = {
+          ...metaboliteRelevance.metabolite,
+          relevance: {
+            label: relevanceMap[metaboliteRelevance.relevance.level],
+            value: metaboliteRelevance.relevance
+          }
+        };
+      });
 
-// Converte o objeto combinado em uma array
-const finalMetabolitesArray = Object.keys(combinedMetabolites).map(name => ({
-  label: name,
-  value: combinedMetabolites[name]
-}));
+      // Converte o objeto combinado em uma array
+      const finalMetabolitesArray = Object.keys(combinedMetabolites).map(name => ({
+        label: name,
+        value: combinedMetabolites[name]
+      }));
 
-formik.setFieldValue("metabolites", finalMetabolitesArray, true);
+      formik.setFieldValue("metabolites", finalMetabolitesArray, true);
 
       formik.setFieldTouched("metabolites", true);
     }
@@ -126,6 +137,7 @@ formik.setFieldValue("metabolites", finalMetabolitesArray, true);
             name="specie"
             loading={loadingSpecies}
           />
+          <Input name="name" label="Nome" formik={formik} />
           <Input type="textarea" name="description" label="Descrição" formik={formik} />
         </section>
         <section>
@@ -140,7 +152,7 @@ formik.setFieldValue("metabolites", finalMetabolitesArray, true);
             isMulti
           />
           {formik.values.popularNames?.length > 0 && formik.values.popularNames?.map((popularName, i) => (
-            <div key={i}>
+            <div key={popularName.value.name || popularName.value}>
               <h3>{popularName.value.name || popularName.value}</h3>
               <Input
                 type="textarea"
@@ -165,9 +177,11 @@ formik.setFieldValue("metabolites", finalMetabolitesArray, true);
               }
             })) : []}
             isMulti
+            creatable
+            onCreateTerm="term"
           />
           {formik.values.therapeuticEffects?.map((therapeuticEffect, i) => (
-            <div key={therapeuticEffect.value.id || i}>
+            <div key={therapeuticEffect.value.term}>
               <h3>{therapeuticEffect.value.term}</h3>
               <Input
                 type="textarea"
@@ -197,9 +211,10 @@ formik.setFieldValue("metabolites", finalMetabolitesArray, true);
             name="metabolites"
             options={metabolitesData ? metabolitesData.metabolites.map((metabolite) => ({ label: metabolite.name, value: { id: metabolite.id, name: metabolite.name, description: metabolite.description } })) : []}
             isMulti
+            creatable
           />
           {formik.values.metabolites?.map((metabolite, i) => (
-            <div key={i}>
+            <div key={metabolite.value.name}>
               <h3>{metabolite.value.name}</h3>
               <Input
                 type="textarea"
@@ -219,18 +234,11 @@ formik.setFieldValue("metabolites", finalMetabolitesArray, true);
             </div>
           ))}
         </section>
-        <section>
-          <header>
-            <h2>Efeitos Terapêuticos</h2>
-          </header>
-        </section>
-        <section>
-          <h3>Sintomas relacionados</h3>
-        </section>
         <pre>
           {JSON.stringify(formik, null, 2)}
         </pre>
-        <Button type="submit">Salvar</Button>
+        <br /><br />
+        <Button type="submit" loading={updateSpecieLoading}>Salvar</Button>
       </form>
     </Article>
   );

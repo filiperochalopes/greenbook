@@ -2,14 +2,14 @@ import Button from "./styles";
 
 import PropTypes from "prop-types";
 
-const Btn = ({ children, onClick, type, className, disabled }) => (
+const Btn = ({ children, onClick, type, className, disabled, loading }) => (
   <Button
     type={type}
     onClick={onClick}
     className={className}
     disabled={disabled}
   >
-    {children}
+    {loading ? "Carregando..." : children}
   </Button>
 );
 
@@ -19,12 +19,14 @@ Btn.propTypes = {
   className: PropTypes.string,
   type: PropTypes.string.isRequired,
   disabled: PropTypes.bool,
+  loading: PropTypes.bool
 };
 
 Btn.defaultProps = {
   type: "button",
   disabled: false,
-  onClick: () => {},
+  loading: false,
+  onClick: () => { },
 };
 
 export default Btn;

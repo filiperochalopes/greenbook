@@ -71,11 +71,13 @@ export const GET_SPECIE = gql`
       observation
     }
     metabolites{
+      id
       name
       description
     }
     metabolitesRelevance{
       metabolite{
+        id
         name
         description
       }
@@ -138,6 +140,14 @@ export const GET_RELEVANCE = gql`
       level
       description
       hexColor
+    }
+  }
+`;
+
+export const UPDATE_SPECIE = gql`
+  mutation UpdateSpecie($id: Int!, $name: String!, $description: String, $popularNames: [PopularNameInput], $therapeuticEffects: [TherapeuticEffectInput], $metabolites: [MetaboliteInput]) {
+    updateSpecie(id: $id, name: $name, description: $description, popularNames: $popularNames, therapeuticEffects: $therapeuticEffects, metabolites: $metabolites) {
+      id
     }
   }
 `;

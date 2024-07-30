@@ -8,8 +8,17 @@ import popularNames from './resolvers/queries/popularNames.js'
 import therapeuticEffects from './resolvers/queries/therapeuticEffects.js'
 import relevance from './resolvers/queries/relevance.js'
 
+import createSpecie from './resolvers/mutations/createSpecie.js'
+import updateSpecie from './resolvers/mutations/updateSpecie.js'
+
 export const schema = createSchema({
   typeDefs: /* GraphQL */ `
+
+    type Mutation {
+      updateSpecie(id: Int!, name: String!, description: String, 
+      popularNames: [PopularNameInput], therapeuticEffects: [TherapeuticEffectInput], metabolites: [MetaboliteInput]): Specie
+      createSpecie(name: String!): Specie
+    }
     type Query {
       hello: String
       "Busca por diversos itens e tipos de objetos no banco de dados, q deve ser uma string para busca de nome de espécies e outros, enquanto o filters serve para buscar efeitos terápeuticos em ação conjunta"
@@ -102,9 +111,34 @@ export const schema = createSchema({
       name: String
       description: String
     }
+
+    input MetaboliteInput{
+      id: Int
+      name: String!
+      description: String
+      relevance: String
+    }
+
+    input TherapeuticEffectInput{
+      id: Int
+      term: String!
+      meaning: String!
+      relevance: String
+    }
+
+    input PopularNameInput{
+      id: Int
+      name: String!
+      observation: String
+    }
+
   `,
 
   resolvers: {
+    Mutation: {
+      updateSpecie,
+      createSpecie
+    },
     Query: {
       hello: () => 'world',
       search,
