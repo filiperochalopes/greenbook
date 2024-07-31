@@ -9,7 +9,7 @@ import { ThemeProvider } from 'styled-components'
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'
 import Edit from './views/Edit'
-// import Add from './views/Add'
+import Add from './views/Add'
 
 const client = new ApolloClient({
   uri: 'https://greenbook.filipelopes.med.br/graphql',
@@ -44,7 +44,7 @@ function App() {
                 <Footer withLogo={Boolean(searchResults.length || individualResult.title)} />
               </>} />
               <Route exact path="/edit" element={<Edit />} />
-              {/* <Route exact path="/add" element={<Add />} /> */}
+              <Route exact path="/add" element={<Add />} />
             </Routes>
           </Router>
         </ThemeProvider>

@@ -10,6 +10,8 @@ import { useFormik } from "formik";
 import { useEffect, useState } from "react";
 import { components } from "react-select";
 
+import { Link } from "react-router-dom";
+
 const EditForm = () => {
   const { data: speciesData, loading: loadingSpecies } = useQuery(GET_SPECIES),
     { data: popularNamesData } = useQuery(GET_POPULAR_NAMES),
@@ -154,6 +156,7 @@ const EditForm = () => {
   return (
     <Article>
       <h1>Formulário de Edição</h1>
+      <Link to="/add">Adicionar espécie</Link>
       <form onSubmit={formik.handleSubmit}>
         <section>
           <header>
@@ -165,103 +168,106 @@ const EditForm = () => {
             name="specie"
             loading={loadingSpecies}
           />
-          <Input name="name" label="Nome" formik={formik} />
-          <Input type="textarea" name="description" label="Descrição" formik={formik} />
+          {formik.values.name && <><Input name="name" label="Nome" formik={formik} />
+            <Input type="textarea" name="description" label="Descrição" formik={formik} /></>}
         </section>
-        <section>
-          <header>
-            <h2>Nomes Populares</h2>
-          </header>
-          <Select
-            formik={formik}
-            name="popularNames"
-            options={popularNamesData ? popularNamesData.popularNames?.map((popularName) => ({ label: popularName.name, value: { id: popularName.id, name: popularName.name, observation: popularName.observation } })) : []}
-            creatable
-            isMulti
-          />
-          {formik.values.popularNames?.length > 0 && formik.values.popularNames?.map((popularName, i) => (
-            <div key={popularName.value.name || popularName.value}>
-              <h3>{popularName.value.name || popularName.value}</h3>
-              <Input
-                type="textarea"
-                name={`popularNames.${i}.value.observation`}
-                label="Observações"
-                formik={formik}
-              />
-            </div>
-          ))}
-        </section>
-        <section>
-          <header>
-            <h2>Efeitos Terapêuticos</h2>
-          </header>
-          <Select
-            formik={formik}
-            name="therapeuticEffects"
-            options={therapeuticEffectsData ? therapeuticEffectsData.therapeuticEffects.map((therapeuticEffect) => ({
-              label: therapeuticEffect.term, value: {
-                id: therapeuticEffect.id,
-                term: therapeuticEffect.term, meaning: therapeuticEffect.meaning
-              }
-            })) : []}
-            isMulti
-            creatable
-            onCreateTerm="term"
-          />
-          {formik.values.therapeuticEffects?.map((therapeuticEffect, i) => (
-            <div key={therapeuticEffect.value.term}>
-              <h3>{therapeuticEffect.value.term}</h3>
-              <Input
-                type="textarea"
-                name={`therapeuticEffects.${i}.value.meaning`}
-                label="Definição"
-                formik={formik}
-              />
-              <Select
-                formik={formik}
-                name={`therapeuticEffects.${i}.value.relevance`}
-                components={{ Option, SingleValue }}
-                label="Relevância"
-                options={relevanceData && relevanceData.relevance.map((relevance) => ({
-                  label: relevanceMap[relevance.level], value: relevance
-                }))}
-              />
-            </div>
-          ))}
-        </section>
-        <section>
-          <header>
-            <h2>Metabólios Secundários</h2>
-            <p>São os metabólitos com função terapêuticas identificados nos fitocomplexos</p>
-          </header>
-          <Select
-            formik={formik}
-            name="metabolites"
-            options={metabolitesData ? metabolitesData.metabolites.map((metabolite) => ({ label: metabolite.name, value: { id: metabolite.id, name: metabolite.name, description: metabolite.description } })) : []}
-            isMulti
-            creatable
-          />
-          {formik.values.metabolites?.map((metabolite, i) => (
-            <div key={metabolite.value.name}>
-              <h3>{metabolite.value.name}</h3>
-              <Input
-                type="textarea"
-                name={`metabolites.${i}.value.description`}
-                label="Descrição"
-                formik={formik}
-              />
-              <Select
-                formik={formik}
-                name={`metabolites.${i}.value.relevance`}
-                components={{ Option, SingleValue }}
-                label="Relevância"
-                options={relevanceData && relevanceData.relevance.map((relevance) => ({
-                  label: relevanceMap[relevance.level], value: relevance
-                }))}
-              />
-            </div>
-          ))}
-        </section>
+        {formik.values.name && <>
+          <section>
+            <header>
+              <h2>Nomes Populares</h2>
+            </header>
+            <Select
+              formik={formik}
+              name="popularNames"
+              options={popularNamesData ? popularNamesData.popularNames?.map((popularName) => ({ label: popularName.name, value: { id: popularName.id, name: popularName.name, observation: popularName.observation } })) : []}
+              creatable
+              isMulti
+            />
+            {formik.values.popularNames?.length > 0 && formik.values.popularNames?.map((popularName, i) => (
+              <div key={popularName.value.name || popularName.value}>
+                <h3>{popularName.value.name || popularName.value}</h3>
+                <Input
+                  type="textarea"
+                  name={`popularNames.${i}.value.observation`}
+                  label="Observações"
+                  formik={formik}
+                />
+              </div>
+            ))}
+          </section>
+          <section>
+            <header>
+              <h2>Efeitos Terapêuticos</h2>
+            </header>
+            <Select
+              formik={formik}
+              name="therapeuticEffects"
+              options={therapeuticEffectsData ? therapeuticEffectsData.therapeuticEffects.map((therapeuticEffect) => ({
+                label: therapeuticEffect.term, value: {
+                  id: therapeuticEffect.id,
+                  term: therapeuticEffect.term, meaning: therapeuticEffect.meaning
+                }
+              })) : []}
+              isMulti
+              creatable
+              onCreateTerm="term"
+            />
+            {formik.values.therapeuticEffects?.map((therapeuticEffect, i) => (
+              <div key={therapeuticEffect.value.term}>
+                <h3>{therapeuticEffect.value.term}</h3>
+                <Input
+                  type="textarea"
+                  name={`therapeuticEffects.${i}.value.meaning`}
+                  label="Definição"
+                  formik={formik}
+                />
+                <Select
+                  formik={formik}
+                  name={`therapeuticEffects.${i}.value.relevance`}
+                  components={{ Option, SingleValue }}
+                  label="Relevância"
+                  options={relevanceData && relevanceData.relevance.map((relevance) => ({
+                    label: relevanceMap[relevance.level], value: relevance
+                  }))}
+                />
+              </div>
+            ))}
+          </section>
+          <section>
+            <header>
+              <h2>Metabólios Secundários</h2>
+              <p>São os metabólitos com função terapêuticas identificados nos fitocomplexos</p>
+            </header>
+            <Select
+              formik={formik}
+              name="metabolites"
+              options={metabolitesData ? metabolitesData.metabolites.map((metabolite) => ({ label: metabolite.name, value: { id: metabolite.id, name: metabolite.name, description: metabolite.description } })) : []}
+              isMulti
+              creatable
+            />
+            {formik.values.metabolites?.map((metabolite, i) => (
+              <div key={metabolite.value.name}>
+                <h3>{metabolite.value.name}</h3>
+                <Input
+                  type="textarea"
+                  name={`metabolites.${i}.value.description`}
+                  label="Descrição"
+                  formik={formik}
+                />
+                <Select
+                  formik={formik}
+                  name={`metabolites.${i}.value.relevance`}
+                  components={{ Option, SingleValue }}
+                  label="Relevância"
+                  options={relevanceData && relevanceData.relevance.map((relevance) => ({
+                    label: relevanceMap[relevance.level], value: relevance
+                  }))}
+                />
+              </div>
+            ))}
+          </section>
+        </>
+        }
         {/* <pre>
           {JSON.stringify(formik, null, 2)}
         </pre> */}
