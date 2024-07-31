@@ -100,6 +100,17 @@ export const GET_SPECIE = gql`
       term
       meaning
     }
+    therapeuticEffectsRelevance{
+      therapeuticEffect{
+        id
+        term
+        meaning
+      }
+      relevance{
+        level
+        hexColor
+      }
+    }
   }
 }
 `;
@@ -151,3 +162,11 @@ export const UPDATE_SPECIE = gql`
     }
   }
 `;
+
+export const CREATE_SPECIE = gql`
+  mutation CreateSpecie($name: String!) {
+    createSpecie(name: $name) {
+      id
+    }
+  }
+  `

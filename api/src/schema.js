@@ -63,6 +63,7 @@ export const schema = createSchema({
       metabolites: [SecondaryMetabolismDerivatives]
       metabolitesRelevance: [SecondaryMetabolismDerivativesRelevance]
       therapeuticEffects: [TherapeuticEffect]
+      therapeuticEffectsRelevance: [TherapeuticEffectRelevance]
       prescriptions: [PrescriptionSuggestion]
       q: String
     }
@@ -78,6 +79,12 @@ export const schema = createSchema({
       id: Int
       term: String
       meaning: String
+    }
+
+    type TherapeuticEffectRelevance{
+      relevance: Relevance
+      specie: Specie
+      therapeuticEffect: TherapeuticEffect
     }
 
     type SecondaryMetabolismDerivatives {

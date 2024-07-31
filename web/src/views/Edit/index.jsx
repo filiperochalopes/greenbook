@@ -18,7 +18,7 @@ const EditForm = () => {
     { data: relevanceData } = useQuery(GET_RELEVANCE),
     [updateSpecie, { loading: updateSpecieLoading }] = useMutation(UPDATE_SPECIE),
     [specieId, setSpecieId] = useState(null),
-    [getSpecie, { data: specieData }] = useLazyQuery(GET_SPECIE),
+    [getSpecie, { data: specieData }] = useLazyQuery(GET_SPECIE, { fetchPolicy: "no-cache" }),
     relevanceMap = {
       low: "Baixa",
       medium: "Media",
@@ -36,6 +36,7 @@ const EditForm = () => {
         }
         console.log(data)
         updateSpecie({ variables: { id: specieId, ...data } });
+        formik.resetForm();
       }
     });
 
@@ -98,8 +99,35 @@ const EditForm = () => {
       }));
 
       formik.setFieldValue("metabolites", finalMetabolitesArray, true);
-
       formik.setFieldTouched("metabolites", true);
+
+      // cadastra os efeitos terapêuticos
+      const combinedTherapeuticEffects = {};
+
+      specieData.specie.therapeuticEffects.forEach(therapeuticEffect => {
+        combinedTherapeuticEffects[therapeuticEffect.term] = {
+          ...therapeuticEffect,
+          relevance: null
+        };
+      });
+
+      specieData.specie.therapeuticEffectsRelevance.forEach(therapeuticEffectRelevance => {
+        combinedTherapeuticEffects[therapeuticEffectRelevance.therapeuticEffect.term] = {
+          ...therapeuticEffectRelevance.therapeuticEffect,
+          relevance: {
+            label: relevanceMap[therapeuticEffectRelevance.relevance.level],
+            value: therapeuticEffectRelevance.relevance
+          }
+        };
+      });
+
+      const finalTherapeuticEffectsArray = Object.keys(combinedTherapeuticEffects).map(term => ({
+        label: term,
+        value: combinedTherapeuticEffects[term]
+      }));
+
+      formik.setFieldValue("therapeuticEffects", finalTherapeuticEffectsArray, true);
+      formik.setFieldTouched("therapeuticEffects", true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [specieData]);
@@ -234,9 +262,9 @@ const EditForm = () => {
             </div>
           ))}
         </section>
-        <pre>
+        {/* <pre>
           {JSON.stringify(formik, null, 2)}
-        </pre>
+        </pre> */}
         <br /><br />
         <Button type="submit" loading={updateSpecieLoading}>Salvar</Button>
       </form>
