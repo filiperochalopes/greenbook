@@ -40,7 +40,7 @@ const Input = ({
         }}
         onFocus={onFocus}
         required={required}
-        value={formik?.values[name]}
+        value={value}
         disabled={disabled}
       />
     ) : (

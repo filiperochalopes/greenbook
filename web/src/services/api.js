@@ -155,6 +155,16 @@ export const GET_RELEVANCE = gql`
   }
 `;
 
+export const GET_PLANT_PARTS = gql`
+  query PlantParts {
+    plantParts {
+      id
+      name
+      description
+    }
+  }
+`;
+
 export const UPDATE_SPECIE = gql`
   mutation UpdateSpecie($id: Int!, $name: String!, $description: String, $popularNames: [PopularNameInput], $therapeuticEffects: [TherapeuticEffectInput], $metabolites: [MetaboliteInput]) {
     updateSpecie(id: $id, name: $name, description: $description, popularNames: $popularNames, therapeuticEffects: $therapeuticEffects, metabolites: $metabolites) {

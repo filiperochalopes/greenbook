@@ -1,4 +1,4 @@
-export default async (_, { id, name, description, therapeuticEffects, popularNames, metabolites }, ctx) => {
+export default async (_, { id, name, description, therapeuticEffects, popularNames, metabolites, prescriptionSuggestions}, ctx) => {
   // Atualizando nomes populares
   let popularNameIds = []
   for (const popularName of popularNames) {
@@ -160,6 +160,36 @@ export default async (_, { id, name, description, therapeuticEffects, popularNam
     }
   }
 
+  // Atualizando sugestões de prescrições
+  let newPrescriptionSuggestions = []
+  console.log("Atualizando sugestões de prescrições")
+  for (const prescription of prescriptionSuggestions) {
+    if (prescription.id) {
+      console.log(`Atualizando sugestão de prescrição: ${prescription.id} - ${prescription.name}`)
+      await ctx.prisma.prescriptionSuggestions.update({
+        where: {
+          id: prescription.id
+        },
+        data: {
+          name: prescription.name,
+          description: prescription.description,
+          plantPartId: prescription.plantPartId
+        }
+      })
+    } else {
+      console.log(`Criando nova sugestão de prescrição: ${prescription.name}`)
+      let newPrescription = await ctx.prisma.prescriptionSuggestions.create({
+        data: {
+          name: prescription.name,
+          description: prescription.description,
+          plantPartId: prescription.plantPartId
+        }
+      })
+      console.log(`Criada sugestão de prescrição: ${newPrescription.id} - ${newPrescription.name}`)
+      newPrescriptionSuggestions.push({ id: newPrescription.id })
+    }
+  }
+
   console.log({
     name,
     description,
@@ -189,6 +219,9 @@ export default async (_, { id, name, description, therapeuticEffects, popularNam
       },
       metabolites: {
         connect: newMetaboliteIds
+      },
+      prescriptionSuggestions: {
+        connect: newPrescriptionSuggestions
       }
     },
     include: {

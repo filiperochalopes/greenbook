@@ -7,6 +7,7 @@ import metabolites from './resolvers/queries/metabolites.js'
 import popularNames from './resolvers/queries/popularNames.js'
 import therapeuticEffects from './resolvers/queries/therapeuticEffects.js'
 import relevance from './resolvers/queries/relevance.js'
+import plantParts from './resolvers/queries/plantParts.js'
 
 import createSpecie from './resolvers/mutations/createSpecie.js'
 import updateSpecie from './resolvers/mutations/updateSpecie.js'
@@ -16,7 +17,7 @@ export const schema = createSchema({
 
     type Mutation {
       updateSpecie(id: Int!, name: String!, description: String, 
-      popularNames: [PopularNameInput], therapeuticEffects: [TherapeuticEffectInput], metabolites: [MetaboliteInput]): Specie
+      popularNames: [PopularNameInput], therapeuticEffects: [TherapeuticEffectInput], metabolites: [MetaboliteInput], prescriptionSuggestions: [PrescriptionSuggestionInput]): Specie
       createSpecie(name: String!): Specie
     }
     type Query {
@@ -37,6 +38,8 @@ export const schema = createSchema({
       therapeuticEffects: [TherapeuticEffect]
       "Lista de relevancias disponível para formulário de edição"
       relevance: [Relevance]
+      "Lista de partes das plantas que temos no banco de dados"
+      plantParts: [PlantPart]
     }
 
     type SearchResult {
@@ -115,6 +118,7 @@ export const schema = createSchema({
     }
 
     type PlantPart{
+      id: Int
       name: String
       description: String
     }
@@ -139,6 +143,19 @@ export const schema = createSchema({
       observation: String
     }
 
+    input PrescriptionSuggestionInput{
+      part: PlantPartInput
+      dosage: String
+      quantity: String
+      description: String
+    }
+
+    input PlantPartInput{
+      id: Int
+      name: String!
+      description: String
+    }
+
   `,
 
   resolvers: {
@@ -155,7 +172,8 @@ export const schema = createSchema({
       metabolites,
       popularNames,
       therapeuticEffects,
-      relevance
+      relevance,
+      plantParts
     }
   }
 })

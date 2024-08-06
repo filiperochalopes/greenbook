@@ -4,7 +4,7 @@ import Button from "src/components/Button";
 import Article, { StyledOption, StyledControl } from "./styles";
 
 import { useQuery, useLazyQuery, useMutation } from "@apollo/client";
-import { GET_SPECIES, GET_SPECIE, GET_POPULAR_NAMES, GET_THERAPEUTIC_EFFECTS, GET_METABOLITES, GET_RELEVANCE, UPDATE_SPECIE } from "src/services/api";
+import { GET_SPECIES, GET_SPECIE, GET_POPULAR_NAMES, GET_THERAPEUTIC_EFFECTS, GET_METABOLITES, GET_RELEVANCE, GET_PLANT_PARTS, UPDATE_SPECIE } from "src/services/api";
 
 import { useFormik } from "formik";
 import { useEffect, useState } from "react";
@@ -18,6 +18,7 @@ const EditForm = () => {
     { data: therapeuticEffectsData } = useQuery(GET_THERAPEUTIC_EFFECTS),
     { data: metabolitesData } = useQuery(GET_METABOLITES),
     { data: relevanceData } = useQuery(GET_RELEVANCE),
+    { data: plantPartsData } = useQuery(GET_PLANT_PARTS),
     [updateSpecie, { loading: updateSpecieLoading }] = useMutation(UPDATE_SPECIE),
     [specieId, setSpecieId] = useState(null),
     [getSpecie, { data: specieData }] = useLazyQuery(GET_SPECIE, { fetchPolicy: "no-cache" }),
@@ -27,7 +28,16 @@ const EditForm = () => {
       high: "Alta"
     },
     formik = useFormik({
-      initialValues: {},
+      initialValues: {
+        prescriptionSuggestions: [
+          {
+            part: { label : "Folha", value: 1 },
+            dosage: "Dose aqui",
+            quantity: "Quantidade aqui",
+            description: "Descricão aqui",
+          }
+        ]
+      },
       onSubmit: (values) => {
         let data = {
           name: values.name,
@@ -268,6 +278,41 @@ const EditForm = () => {
           </section>
         </>
         }
+         <section>
+            <header>
+              <h2>Sugestões de Prescrição</h2>
+              <p>Anotações de sugestões de prescrições sugeridas</p>
+            </header>
+            {/* part        PlantPart @relation(fields: [plantPartId], references: [id])
+  dosage      String
+  quantity    String
+  description String */}
+
+  {formik.values.prescriptionSuggestions?.length && formik.values.prescriptionSuggestions.map((_, index) => <> <Select 
+                formik={formik}
+                name="part"
+                options={plantPartsData ? plantPartsData.parts?.map((part) => ({ label: part.name, value: part.id })) : []} 
+              />
+            <Input
+              type="textarea"
+              name={`prescriptionSuggestions.${index}.dosage`}
+              label="Dosagem"
+              formik={formik}
+            />
+            <Input
+              name={`prescriptionSuggestions.${index}.quantity`}
+              label="Quantidade"
+              formik={formik}
+            />
+            <Input
+              type="textarea"
+              name={`prescriptionSuggestions.${index}.description`}
+              label="Descrição"
+              formik={formik}
+            />
+            </>
+            )}
+            </section>
         {/* <pre>
           {JSON.stringify(formik, null, 2)}
         </pre> */}
