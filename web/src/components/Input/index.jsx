@@ -15,8 +15,9 @@ const Input = ({
   disabled,
 }) => {
   // Extrair valor aninhado de formik.values
-  const getValue = (obj, path) => path.split('.').reduce((acc, part) => acc && acc[part], obj);
-  const value = getValue(formik.values, name);
+  const getValue = (obj, path) => path.split('.').reduce((acc, part) => acc && acc[part], obj),
+   value = getValue(formik.values, name),
+   error = getValue(formik.errors, name)
 
   return (
   <InputContainer>
@@ -63,8 +64,8 @@ const Input = ({
         {value}
       </textarea>
     )}
-    {formik?.errors[name] && formik.touched[name] && (
-      <span className="error">{formik.errors[name]}</span>
+    {error && (
+      <span className="error">{error}</span>
     )}
   </InputContainer>
 );

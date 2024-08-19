@@ -4,6 +4,18 @@ export default styled.article`
     padding: 32px 16px;
     max-width: 900px;
     margin: 0 auto;
+
+    section{
+      header{
+        p{
+          margin-bottom: 16px;
+        }
+      }
+    }
+
+    hr{
+      margin: 16px 0;
+    }
 `
 
 export const StyledOption = styled.div`

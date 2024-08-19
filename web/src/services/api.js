@@ -88,11 +88,12 @@ export const GET_SPECIE = gql`
     }
     prescriptions{
       part{
+        id
         name
         description
       }
+      id
       dosage
-      quantity
       description
     }
     therapeuticEffects{
@@ -166,8 +167,8 @@ export const GET_PLANT_PARTS = gql`
 `;
 
 export const UPDATE_SPECIE = gql`
-  mutation UpdateSpecie($id: Int!, $name: String!, $description: String, $popularNames: [PopularNameInput], $therapeuticEffects: [TherapeuticEffectInput], $metabolites: [MetaboliteInput]) {
-    updateSpecie(id: $id, name: $name, description: $description, popularNames: $popularNames, therapeuticEffects: $therapeuticEffects, metabolites: $metabolites) {
+  mutation UpdateSpecie($id: Int!, $name: String!, $description: String, $popularNames: [PopularNameInput], $therapeuticEffects: [TherapeuticEffectInput], $metabolites: [MetaboliteInput], $prescriptionSuggestions: [PrescriptionSuggestionInput]) {
+    updateSpecie(id: $id, name: $name, description: $description, popularNames: $popularNames, therapeuticEffects: $therapeuticEffects, metabolites: $metabolites, prescriptionSuggestions: $prescriptionSuggestions) {
       id
     }
   }

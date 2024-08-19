@@ -165,24 +165,27 @@ export default async (_, { id, name, description, therapeuticEffects, popularNam
   console.log("Atualizando sugestões de prescrições")
   for (const prescription of prescriptionSuggestions) {
     if (prescription.id) {
-      console.log(`Atualizando sugestão de prescrição: ${prescription.id} - ${prescription.name}`)
-      await ctx.prisma.prescriptionSuggestions.update({
+      console.log(`Atualizando sugestão de prescrição: ${prescription.id} - ${prescription.dosage}`)
+      await ctx.prisma.prescriptionSuggestion.update({
         where: {
           id: prescription.id
         },
         data: {
-          name: prescription.name,
+          dosage: prescription.dosage,
           description: prescription.description,
-          plantPartId: prescription.plantPartId
+          plantPartId: prescription.plantPartId,
+          quantity: prescription.quantity
         }
       })
     } else {
-      console.log(`Criando nova sugestão de prescrição: ${prescription.name}`)
-      let newPrescription = await ctx.prisma.prescriptionSuggestions.create({
+      console.log(`Criando nova sugestão de prescrição: ${prescription.dosage}`)
+      let newPrescription = await ctx.prisma.prescriptionSuggestion.create({
         data: {
-          name: prescription.name,
-          description: prescription.description,
-          plantPartId: prescription.plantPartId
+          specieId: id,
+          dosage: prescription.dosage,
+          description: prescription.description || "",
+          plantPartId: prescription.plantPartId,
+          quantity: "", // Obsoleto, mantendo compatibilidade
         }
       })
       console.log(`Criada sugestão de prescrição: ${newPrescription.id} - ${newPrescription.name}`)
@@ -220,7 +223,7 @@ export default async (_, { id, name, description, therapeuticEffects, popularNam
       metabolites: {
         connect: newMetaboliteIds
       },
-      prescriptionSuggestions: {
+      prescriptions: {
         connect: newPrescriptionSuggestions
       }
     },

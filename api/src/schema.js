@@ -110,6 +110,7 @@ export const schema = createSchema({
     }
 
     type PrescriptionSuggestion{
+      id: Int
       specie: Specie
       part: PlantPart
       dosage: String
@@ -144,6 +145,8 @@ export const schema = createSchema({
     }
 
     input PrescriptionSuggestionInput{
+      id: Int
+      plantPartId: Int
       part: PlantPartInput
       dosage: String
       quantity: String

@@ -2,6 +2,7 @@ import Input from "src/components/Input";
 import Select from "src/components/Select";
 import Button from "src/components/Button";
 import Article, { StyledOption, StyledControl } from "./styles";
+import validationSchema from "./validationSchema";
 
 import { useQuery, useLazyQuery, useMutation } from "@apollo/client";
 import { GET_SPECIES, GET_SPECIE, GET_POPULAR_NAMES, GET_THERAPEUTIC_EFFECTS, GET_METABOLITES, GET_RELEVANCE, GET_PLANT_PARTS, UPDATE_SPECIE } from "src/services/api";
@@ -28,25 +29,18 @@ const EditForm = () => {
       high: "Alta"
     },
     formik = useFormik({
-      initialValues: {
-        prescriptionSuggestions: [
-          {
-            part: { label : "Folha", value: 1 },
-            dosage: "Dose aqui",
-            quantity: "Quantidade aqui",
-            description: "Descricão aqui",
-          }
-        ]
-      },
+      initialValues: {},
+      validationSchema,
       onSubmit: (values) => {
         let data = {
           name: values.name,
           description: values.description,
           popularNames: values.popularNames.map(({ value: p }) => ({ id: p.id, name: p.name, observation: p.observation })),
           therapeuticEffects: values.therapeuticEffects.map(({ value: t }) => ({ id: t.id, term: t.term, meaning: t.meaning, relevance: t.relevance?.value?.level })),
-          metabolites: values.metabolites.map(({ value: m }) => ({ id: m.id, name: m.name, description: m.description, relevance: m.relevance?.value?.level }))
+          metabolites: values.metabolites.map(({ value: m }) => ({ id: m.id, name: m.name, description: m.description, relevance: m.relevance?.value?.level })),
+          prescriptionSuggestions: values.prescriptionSuggestions.map(p => ({ id: p.id, plantPartId: p.part?.value?.id, description: p.description, dosage: p.dosage })),
         }
-        console.log(data)
+        console.log({ id: specieId, ...data })
         updateSpecie({ variables: { id: specieId, ...data } });
         formik.resetForm();
       }
@@ -54,6 +48,7 @@ const EditForm = () => {
 
   useEffect(() => {
     if (specieId !== formik.values.specie?.value) {
+      console.log(`Capturando dados da espécie id: ${formik.values.specie?.value}...`);
       setSpecieId(formik.values.specie?.value);
       getSpecie({ variables: { id: formik.values.specie?.value } });
     }
@@ -140,6 +135,12 @@ const EditForm = () => {
 
       formik.setFieldValue("therapeuticEffects", finalTherapeuticEffectsArray, true);
       formik.setFieldTouched("therapeuticEffects", true);
+
+      // Adicionando campos de sugestões de prescrições
+      let prescriptionSuggestions = specieData.specie.prescriptions ? specieData.specie.prescriptions.map(prescription => ({ ...prescription, part: { label: prescription.part.name, value: prescription.part } })) : [];
+
+      formik.setFieldValue("prescriptionSuggestions", prescriptionSuggestions, true);
+      formik.setFieldTouched("prescriptionSuggestions", true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [specieData]);
@@ -240,6 +241,7 @@ const EditForm = () => {
                     label: relevanceMap[relevance.level], value: relevance
                   }))}
                 />
+                <hr />
               </div>
             ))}
           </section>
@@ -273,46 +275,45 @@ const EditForm = () => {
                     label: relevanceMap[relevance.level], value: relevance
                   }))}
                 />
+                <hr />
               </div>
             ))}
           </section>
-        </>
-        }
-         <section>
+          <section>
             <header>
               <h2>Sugestões de Prescrição</h2>
               <p>Anotações de sugestões de prescrições sugeridas</p>
             </header>
-            {/* part        PlantPart @relation(fields: [plantPartId], references: [id])
-  dosage      String
-  quantity    String
-  description String */}
-
-  {formik.values.prescriptionSuggestions?.length && formik.values.prescriptionSuggestions.map((_, index) => <> <Select 
+            {formik.values.prescriptionSuggestions?.length && formik.values.prescriptionSuggestions.map((_, index) => <div key={index}><Select
+              formik={formik}
+              name={`prescriptionSuggestions.${index}.part`}
+              options={plantPartsData ? plantPartsData.plantParts?.map((part) => ({ label: part.name, value: part })) : []}
+            />
+              <Input
+                type="textarea"
+                name={`prescriptionSuggestions.${index}.dosage`}
+                label="Dosagem"
                 formik={formik}
-                name="part"
-                options={plantPartsData ? plantPartsData.parts?.map((part) => ({ label: part.name, value: part.id })) : []} 
               />
-            <Input
-              type="textarea"
-              name={`prescriptionSuggestions.${index}.dosage`}
-              label="Dosagem"
-              formik={formik}
-            />
-            <Input
-              name={`prescriptionSuggestions.${index}.quantity`}
-              label="Quantidade"
-              formik={formik}
-            />
-            <Input
-              type="textarea"
-              name={`prescriptionSuggestions.${index}.description`}
-              label="Descrição"
-              formik={formik}
-            />
-            </>
+              <Input
+                type="textarea"
+                name={`prescriptionSuggestions.${index}.description`}
+                label="Descrição"
+                formik={formik}
+              />
+              {/* Caso não tenha id, mostrar botão para remover */}
+              {!formik.values.prescriptionSuggestions[index].id && <Button
+                onClick={() => formik.setFieldValue('prescriptionSuggestions', formik.values.prescriptionSuggestions.filter((_, i) => i !== index))}
+              >
+                Remover
+              </Button>}
+              <hr />
+            </div>
             )}
-            </section>
+            <Button onClick={() => formik.setFieldValue('prescriptionSuggestions', [...formik.values.prescriptionSuggestions, {} ])}>Adicionar Prescrição</Button>
+          </section>
+        </>
+        }
         {/* <pre>
           {JSON.stringify(formik, null, 2)}
         </pre> */}
