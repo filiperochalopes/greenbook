@@ -16,6 +16,27 @@ export default styled.article`
     hr{
       margin: 16px 0;
     }
+
+    #scroll-to-section{
+      cursor: pointer;
+      margin-bottom: 16px;
+      position: fixed;
+      right: 16px;
+      top: 16px;
+      z-index: 100;
+      border-radius: 4px;
+      padding: 8px;
+      background-color: white;
+      color: ${({ theme }) => theme.colors.primary};
+
+      li{
+        list-style: none;
+
+        &:hover{
+          background-color: rgba(0,0,0,0.1);
+        }
+      }
+    }
 `
 
 export const StyledOption = styled.div`

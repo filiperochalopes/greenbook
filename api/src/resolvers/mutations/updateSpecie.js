@@ -12,7 +12,7 @@ export default async (_, { id, name, description, therapeuticEffects, popularNam
         },
         data: {
           name: popularName.name,
-          observation: popularName.observation
+          observation: popularName.observation || ""
         }
       })
     } else {
@@ -21,7 +21,7 @@ export default async (_, { id, name, description, therapeuticEffects, popularNam
       let newPopularName = await ctx.prisma.popularName.create({
         data: {
           name: popularName.name,
-          observation: popularName.observation
+          observation: popularName.observation || ""
         }
       })
       popularNameIds.push({ id: newPopularName.id })

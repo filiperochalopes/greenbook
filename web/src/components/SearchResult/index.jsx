@@ -3,13 +3,15 @@ import { useContext, useEffect } from "react"
 import AppContext from "src/services/context.js"
 import { useLazyQuery } from "@apollo/client";
 import { GET_ITEM } from "src/services/api.js";
+import { Link } from 'react-router-dom';
 
 const SearchResult = () => {
-  const { searchResults, setLoading, setSearchResults, setIndividualResult } = useContext(AppContext),
+  const { searchResults, setLoading, setSearchResults, setIndividualResult, setSearchTerm } = useContext(AppContext),
     [getIndividualResult, { data, loading }] = useLazyQuery(GET_ITEM)
 
   const handleItemClick = (q) => {
-    getIndividualResult({ variables: { q } });
+    const [type, id] = q.split(":");
+    return `/${type}/${id}`;
   }
 
   useEffect(() => {
@@ -25,10 +27,6 @@ const SearchResult = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data])
 
-  useEffect(() => {
-    console.log(searchResults)
-  },[searchResults])
-
   return (
     <Article>
       {Object.entries(searchResults.reduce((acc, obj) => {
@@ -43,7 +41,9 @@ const SearchResult = () => {
           <header><h1>{group[0]}</h1></header>
           <div>
             {group[1].map(item => (
-              <button key={item.q} className="result-box" onClick={() => handleItemClick(item.q)}>{item.name}</button>
+              <Link to={handleItemClick(item.q)} key={item.q}>
+              <button className="result-box" onClick={() => setSearchTerm("")}>{item.name}</button>
+              </Link>
             ))}
           </div>
         </section>

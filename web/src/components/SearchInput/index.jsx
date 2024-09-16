@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext, useCallback } from "react"
+import { useEffect, useState, useContext, useCallback, useRef } from "react"
 import Container, { WarningTooltip } from "./styles.js"
 import debounce from 'lodash.debounce';
 import AppContext from "src/services/context.js";
@@ -19,7 +19,8 @@ const SearchInput = () => {
     [showHintInfo, setShowHintInfo] = useState(false),
     [showSearchHintInfo, setShowSearchHintInfo] = useState(false),
     { searchResults, setSearchResults, individualResult, setIndividualResult, setLoading, searchTerm, setSearchTerm } = useContext(AppContext),
-    [getSearch, {data, loading }] = useLazyQuery(SEARCH)
+    [getSearch, {data, loading }] = useLazyQuery(SEARCH),
+    inputRef = useRef(null)
 
   // Debounced version of handleSearch function with a delay of 500ms
   const debouncedHandleSearch = useCallback(debounce((value) => {
@@ -28,7 +29,8 @@ const SearchInput = () => {
     getSearch({ variables: { q: value, filter } });
   }, 500), [getSearch, filter]);
 
-  const handleSearch = (value) => {
+  const handleSearch = (e) => {
+    const value = e.target.value
     setSearchTerm(value);
     debouncedHandleSearch(value);
   };
@@ -87,7 +89,7 @@ const SearchInput = () => {
         <a
           id="disclaimer-tooltip"
         >
-          <input type="search" id="search" placeholder="digite para pesquisar um nome de planta, sintomas, metabólitos secundários..." value={searchTerm} onChange={e => handleSearch(e.target.value)} onFocus={handleFocus} onBlur={handleBlur} />
+          <input type="search" id="search" placeholder="digite para pesquisar um nome de planta, sintomas, metabólitos secundários..." value={searchTerm} onChange={e => handleSearch(e)} onFocus={handleFocus} onBlur={handleBlur} ref={inputRef}/>
         </a>
         {showSearchHintInfo && <small>Você pode buscar pelo termo que desejar: nome de espécie, doença, efeitos terapêuticos desejados, metabólitos secundários.Só digtar e aguardar os resultados. A qualquer momento você pode voltar aqui para buscar novos resultadops. :)</small>}
       </div>

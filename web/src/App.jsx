@@ -12,7 +12,9 @@ import Edit from './views/Edit'
 import Add from './views/Add'
 
 const client = new ApolloClient({
-  uri: 'https://greenbook.filipelopes.med.br/graphql',
+  // uri: 'https://greenbook.filipelopes.med.br/graphql',
+  uri: 'http://192.168.0.100:8086/graphql',
+  // uri: '/graphql',
   cache: new InMemoryCache(),
 });
 
@@ -38,13 +40,14 @@ function App() {
                 <Header withLogo={Boolean(!searchResults.length && !individualResult.title && !loading)} />
                 {/* Mostra o resultado da busca */}
                 {Boolean(searchResults.length && !individualResult.title) && <SearchResult />}
-                {/* Mostra o conteúdo individual da seleção */}
+                {/* Retorna vazio caso não encontre nada */}
                 {Boolean(!searchResults.length && !loading && searchTerm && !individualResult.title) && <center style={{ opacity: 0.5, margin: '2rem 0' }}>Não foram encontrados resultados para sua busca</center>}
-                {Boolean(!searchResults.length && individualResult.title) && <Content />}
                 <Footer withLogo={Boolean(searchResults.length || individualResult.title)} />
               </>} />
               <Route exact path="/edit" element={<Edit />} />
               <Route exact path="/add" element={<Add />} />
+              {/* Rota dinâmica para espécies e efeitos terapêuticos */}
+              <Route exact path="/:type/:id" element={<Content />} />
             </Routes>
           </Router>
         </ThemeProvider>

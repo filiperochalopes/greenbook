@@ -166,10 +166,17 @@ const EditForm = () => {
 
   return (
     <Article>
+      <ul id="scroll-to-section">
+        <li onClick={() => document.getElementById("specie").scrollIntoView({ behavior: "smooth", block: "start" })}>Início</li>
+        <li onClick={() => document.getElementById("popular-names").scrollIntoView({ behavior: "smooth", block: "start" })}>Nomes Populares</li>
+        <li onClick={() => document.getElementById("therapeutic-effects").scrollIntoView({ behavior: "smooth", block: "start" })}>Efeitos terápeuticos</li>
+        <li onClick={() => document.getElementById("metabolites").scrollIntoView({ behavior: "smooth", block: "start" })}>Metabólitos</li>
+        <li onClick={() => document.getElementById("prescription-suggestions").scrollIntoView({ behavior: "smooth", block: "start" })}>Sugestões de prescrição</li>
+      </ul>
       <h1>Formulário de Edição</h1>
       <Link to="/add">Adicionar espécie</Link>
       <form onSubmit={formik.handleSubmit}>
-        <section>
+        <section id="specie">
           <header>
             <h2>Espécie</h2>
           </header>
@@ -183,7 +190,7 @@ const EditForm = () => {
             <Input type="textarea" name="description" label="Descrição" formik={formik} /></>}
         </section>
         {formik.values.name && <>
-          <section>
+          <section id="popular-names">
             <header>
               <h2>Nomes Populares</h2>
             </header>
@@ -206,7 +213,7 @@ const EditForm = () => {
               </div>
             ))}
           </section>
-          <section>
+          <section id="therapeutic-effects">
             <header>
               <h2>Efeitos Terapêuticos</h2>
             </header>
@@ -245,7 +252,7 @@ const EditForm = () => {
               </div>
             ))}
           </section>
-          <section>
+          <section id="metabolites">
             <header>
               <h2>Metabólios Secundários</h2>
               <p>São os metabólitos com função terapêuticas identificados nos fitocomplexos</p>
@@ -279,7 +286,7 @@ const EditForm = () => {
               </div>
             ))}
           </section>
-          <section>
+          <section id="prescription-suggestions">
             <header>
               <h2>Sugestões de Prescrição</h2>
               <p>Anotações de sugestões de prescrições sugeridas</p>
