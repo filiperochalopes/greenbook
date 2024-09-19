@@ -28,7 +28,8 @@
 				"codeium.codeium",
 				"styled-components.vscode-styled-components",
 				"esbenp.prettier-vscode",
-				"prisma.prisma"
+				"prisma.prisma",
+				"apollographql.vscode-apollo",
 			]
 		}
 	}

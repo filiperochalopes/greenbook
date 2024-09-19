@@ -73,15 +73,17 @@ export const schema = createSchema({
 
     type PopularName {
       id: Int
+      q: String
       name: String
       observation: String
-      q: String
     }
 
     type TherapeuticEffect{
       id: Int
+      q: String
       term: String
       meaning: String
+      relevance: Relevance
     }
 
     type TherapeuticEffectRelevance{
@@ -92,9 +94,10 @@ export const schema = createSchema({
 
     type SecondaryMetabolismDerivatives {
       id: Int
+      q: String
       name: String
       description: String
-      q: String
+      relevance: Relevance
     }
 
     type SecondaryMetabolismDerivativesRelevance{
