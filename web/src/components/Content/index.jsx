@@ -1,4 +1,4 @@
-import Article, { Container } from "./styles.js"
+import Article from "./styles.js"
 import { useContext, useEffect } from "react"
 import AppContext from "src/services/context.js"
 import { useLazyQuery } from "@apollo/client";
@@ -48,7 +48,7 @@ const Content = () => {
   }, [searchTerm])
 
   return <PageTemplate>
-    {Boolean(searchResults.length > 0 && searchTerm !== "" && !loading) ? <SearchResult /> : <Article>
+    {searchResults.length > 0 && searchTerm !== "" && !loading ? <SearchResult /> : <Article>
       <section style={{ textAlign: "center", marginTop: "1rem" }}>
         <button onClick={() => {
           navigator.clipboard.writeText(window.location.href)
@@ -118,7 +118,9 @@ const Content = () => {
         </ul>
       </section>}
       <section style={{ textAlign: "center", marginTop: "1rem" }}>
-        <button onClick={() => navigate(-1)}>Voltar</button>
+        <button onClick={() => {
+          navigate(-1)
+        }}>Voltar</button>
       </section>
     </Article>}
   </PageTemplate>

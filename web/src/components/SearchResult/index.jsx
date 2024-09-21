@@ -1,31 +1,14 @@
 import Article from "./styles.js"
-import { useContext, useEffect } from "react"
+import { useContext } from "react"
 import AppContext from "src/services/context.js"
-import { useLazyQuery } from "@apollo/client";
-import { GET_ITEM } from "src/services/api.js";
 import { Link } from 'react-router-dom';
 
 const SearchResult = () => {
-  const { searchResults, setLoading, setSearchResults, setIndividualResult, setSearchTerm } = useContext(AppContext),
-    [getIndividualResult, { data, loading }] = useLazyQuery(GET_ITEM)
-
-  const handleItemClick = (q) => {
+  const { searchResults, setSearchTerm } = useContext(AppContext),
+  handleItemClick = (q) => {
     const [type, id] = q.split(":");
     return `/${type}/${id}`;
   }
-
-  useEffect(() => {
-    setLoading(loading)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loading])
-
-  useEffect(() => {
-    if (data) {
-      setIndividualResult(data.getItem)
-      setSearchResults([])
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data])
 
   return (
     <Article>

@@ -13,6 +13,8 @@ import { components } from "react-select";
 
 import { Link } from "react-router-dom";
 
+import PropTypes from "prop-types";
+
 const EditForm = () => {
   const { data: speciesData, loading: loadingSpecies } = useQuery(GET_SPECIES),
     { data: popularNamesData } = useQuery(GET_POPULAR_NAMES),
@@ -153,6 +155,12 @@ const EditForm = () => {
     );
   };
 
+  Option.propTypes = {
+    value: PropTypes.shape({
+      hexColor: PropTypes.string
+    })
+  };
+
   const SingleValue = ({
     children,
     ...props
@@ -163,6 +171,15 @@ const EditForm = () => {
       </StyledControl>
     );
   }
+
+  SingleValue.propTypes = {
+    children: PropTypes.node,
+    data: PropTypes.shape({
+      value: PropTypes.shape({
+        hexColor: PropTypes.string
+      })
+    })
+  };
 
   return (
     <Article>
