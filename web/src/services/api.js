@@ -26,13 +26,22 @@ export const GET_ITEM = gql`
         q
       }
       metabolites {
+        q
         name
         description
-        q
+        relevance{
+          level
+          hexColor
+        }
       }
       therapeuticEffects{
+        q
         term
         meaning
+        relevance {
+          level
+          hexColor
+        }
       }
       prescriptionSuggestions {
         specie {

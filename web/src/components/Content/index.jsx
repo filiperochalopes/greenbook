@@ -4,7 +4,7 @@ import AppContext from "src/services/context.js"
 import { useLazyQuery } from "@apollo/client";
 import { GET_ITEM } from "src/services/api.js";
 import { Link } from 'react-router-dom';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import PageTemplate from "../PageTemplate";
 import SearchResult from "src/components/SearchResult";
 import { enqueueSnackbar } from 'notistack';
@@ -12,7 +12,8 @@ import { enqueueSnackbar } from 'notistack';
 const Content = () => {
   const { individualResult: r, setIndividualResult, searchResults, searchTerm, loading } = useContext(AppContext),
     [getIndividualResult, { data }] = useLazyQuery(GET_ITEM),
-    { type: urlParamType, id: urlParamId } = useParams()
+    { type: urlParamType, id: urlParamId } = useParams(),
+    navigate = useNavigate();
 
   const handleItemClick = (q) => {
     const [type, id] = q.split(":");
@@ -74,18 +75,35 @@ const Content = () => {
         </header>
         {r.popularNames.map((elem) => <Link to={handleItemClick(elem.q)} key={elem.name}><button>{elem.name}</button></Link>)}
       </section>}
-      {Boolean(r.metabolites?.length) && <section>
-        <header>
-          <h2>Metabólitos</h2>
-        </header>
-        {r.metabolites.map((elem) => <button onClick={() => handleItemClick(elem.q)} key={elem.name}>{elem.name}</button>)}
-      </section>}
-      {Boolean(r.therapeuticEffects?.length) && <section>
-        <header>
-          <h2>Efeitos terapêuticos</h2>
-        </header>
-        {r.therapeuticEffects.map((elem) => <button onClick={() => handleItemClick(elem.q)} key={elem.term}>{elem.term}</button>)}
-      </section>}
+      {Boolean(r.metabolites?.length) && (
+  <section>
+    <header>
+      <h2>Metabólitos</h2>
+    </header>
+    {r.metabolites.map((elem) => (
+      <Link to={handleItemClick(elem.q)} key={elem.name}>
+        <button style={elem.relevance ? { borderColor: `#${elem.relevance.hexColor}` } : {}}>
+          {elem.name}
+        </button>
+      </Link>
+    ))}
+  </section>
+)}
+
+{Boolean(r.therapeuticEffects?.length) && (
+  <section>
+    <header>
+      <h2>Efeitos Terapêuticos</h2>
+    </header>
+    {r.therapeuticEffects.map((elem) => (
+      <Link to={handleItemClick(elem.q)} key={elem.term}>
+        <button style={elem.relevance ? { borderColor: `#${elem.relevance.hexColor}` } : {}}>
+          {elem.term}
+        </button>
+      </Link>
+    ))}
+  </section>
+)}
       {Boolean(r.prescriptionSuggestions?.length) && <section>
         <header>
           <h2>Sugestões de Prescricão</h2>
@@ -99,6 +117,9 @@ const Content = () => {
             }}>{elem.specie.name} ({elem.part.name}) {elem.dosage}</button>{(elem.description || elem.quantity) && <p>{elem.quantity && <span>{elem.quantity}</span>}{elem.description && elem.quantity && <span> - </span>}{elem.description && <span>{elem.description}</span>}</p>}</li>)}
         </ul>
       </section>}
+      <section style={{ textAlign: "center", marginTop: "1rem" }}>
+        <button onClick={() => navigate(-1)}>Voltar</button>
+      </section>
     </Article>}
   </PageTemplate>
 }

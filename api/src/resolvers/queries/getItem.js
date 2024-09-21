@@ -57,7 +57,7 @@ export default async (_, { q }, ctx) => {
       relevance: rel.relevance, // Inclui a relevância do metabolito
       q: `metabolito:${rel.metabolite.id}`, // Adiciona o mapeamento de 'q' para metabolitos
     }));
-  
+    
     result.metabolites = [
       ...specie.metabolites.map((metabolite) => {
         const relevance = specie.metabolitesRelevance?.find(
@@ -65,6 +65,7 @@ export default async (_, { q }, ctx) => {
         );
         return {
           ...metabolite,
+          q: `metabolito:${metabolite.id}`, // Adiciona o mapeamento de 'q' para metabolitos
           relevance: relevance ? relevance.relevance : null,
         };
       }),
@@ -88,7 +89,7 @@ export default async (_, { q }, ctx) => {
         q: `efeito-terapeutico:${rel.therapeuticEffect.id}`, // Adiciona o mapeamento de 'q' para efeitos terapêuticos
       })
     );
-  
+    
     result.therapeuticEffects = [
       ...specie.therapeuticEffects.map((effect) => {
         const relevance = specie.therapeuticEffectsRelevance?.find(
@@ -96,6 +97,7 @@ export default async (_, { q }, ctx) => {
         );
         return {
           ...effect,
+          q: `efeito-terapeutico:${effect.id}`, // Adiciona o mapeamento de 'q' para efeitos terapêuticos
           relevance: relevance ? relevance.relevance : null,
         };
       }),
