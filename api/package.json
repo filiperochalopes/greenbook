@@ -11,12 +11,14 @@
     "data-migration:add-relevance-data": "node ./prisma/migrations/20240513141258_add_relevance_realationship_model/data-migration.cjs"
   },
   "devDependencies": {
-    "prisma": "^5.10.2",
-    "nodemon": "3.1.0"
+    "nodemon": "3.1.0",
+    "prisma": "^5.10.2"
   },
   "dependencies": {
     "@prisma/client": "^5.10.2",
     "graphql": "^16.8.1",
-    "graphql-yoga": "^5.2.0"
+    "graphql-yoga": "^5.2.0",
+    "lodash": "^4.17.21",
+    "lodash.combinations": "^18.11.1"
   }
 }
