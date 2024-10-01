@@ -11,8 +11,8 @@ import Add from './views/Add'
 import { SnackbarProvider } from 'notistack';
 
 const client = new ApolloClient({
-  uri: 'https://greenbook.filipelopes.med.br/graphql',
-  // uri: 'http://192.168.0.100:8086/graphql',
+  // uri: 'https://greenbook.filipelopes.med.br/graphql',
+  uri: 'http://192.168.0.100:8086/graphql',
   // uri: '/graphql',
   cache: new InMemoryCache(),
 });

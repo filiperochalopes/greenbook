@@ -1,4 +1,14 @@
 services:
+  db:
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+      - ./db-entrypoint:/docker-entrypoint-initdb.d
   api:
     build:
       context: api
@@ -11,8 +21,6 @@ services:
       - ./api:/app
     environment:
       DATABASE_URL: "postgresql://${DB_USER}:${DB_PASS}@${DB_HOST}:5432/${DB_NAME}?schema=public"
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
     ports:
       - ${PRISMA_STUDIO_PORT}:5555
     restart: always
