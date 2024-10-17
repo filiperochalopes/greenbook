@@ -30,7 +30,8 @@ const SearchInput = () => {
   }, 500), [getSearch, filter]);
 
   const handleSearch = (e) => {
-    const value = e.target.value
+    console.log(filter, e)
+    const value = e?.target?.value || "";
     setSearchTerm(value);
     debouncedHandleSearch(value);
   };

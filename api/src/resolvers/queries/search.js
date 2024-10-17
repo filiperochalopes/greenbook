@@ -5,90 +5,91 @@ import _ from "lodash";
 function generateCombinations(arr) {
   let results = [];
 
-  // Gerar combinações de tamanho 2 e 3
+  // Gerar combinações de tamanho 1, 2 e 3
   for (let i = 1; i <= 3; i++) {
-    results = results.concat(_.combinations(arr, i));
+    results = results.concat(_.combinations(arr, i)); // Usa a função 'combinations' do lodash para criar combinações
   }
 
   return results;
 }
 
-export default async (_, { q, filter }, ctx) => {
+export default async (__, { q, filter }, ctx) => {
   let results = [];
 
-  // Busca inicial baseada na query string
+  // Realiza uma busca inicial de espécies baseada na query string 'q'
   let species = await ctx.prisma.specie.findMany({
     where: {
       OR: [
         {
           name: {
-            contains: q,
-            mode: "insensitive",
+            contains: q, // Busca por espécies cujo nome contém a query 'q'
+            mode: "insensitive", // Modo de busca sem diferenciar maiúsculas e minúsculas
           },
         },
         {
           description: {
-            contains: q,
+            contains: q, // Busca por espécies cuja descrição contém a query 'q'
             mode: "insensitive",
           },
         },
       ],
     },
     include: {
-      therapeuticEffects: true,
+      therapeuticEffects: true, // Inclui os efeitos terapêuticos da espécie no resultado
       therapeuticEffectsRelevance: {
         include: {
           relevance: true,
-          therapeuticEffect: true,
+          therapeuticEffect: true, // Inclui informações de relevância e efeitos terapêuticos relevantes
         },
       },
     },
   });
 
-  // Função para verificar se a espécie contém os efeitos filtrados (combinados)
+  // Função que verifica se uma espécie contém todos os efeitos terapêuticos filtrados
   const matchesTherapeuticEffects = (specie, filters) => {
     return filters.every((filterName) => {
       return (
         specie.therapeuticEffects.some(
-          (effect) => effect.term === filterName
+          (effect) => effect.term === filterName // Verifica se o efeito terapêutico existe na espécie
         ) ||
         specie.therapeuticEffectsRelevance.some(
-          (rel) => rel.therapeuticEffect.term === filterName
+          (rel) => rel.therapeuticEffect.term === filterName // Verifica se o efeito terapêutico relevante existe na espécie
         )
       );
     });
   };
 
-  // Filtro inicial (caso todos os filtros sejam encontrados)
+  // Filtra as espécies que correspondem a todos os efeitos terapêuticos filtrados
   let matchedSpecies = species.filter((specie) =>
     matchesTherapeuticEffects(specie, filter)
   );
 
   if (matchedSpecies.length > 0) {
+    // Se houver espécies que correspondem a todos os filtros, adiciona os resultados
     results = results.concat(
       matchedSpecies.map((cur) => ({
         name: cur.name,
         group: "Espécies",
-        q: `especie:${cur.id}`,
+        q: `especie:${cur.id}`, // Adiciona informações sobre a espécie encontrada
       }))
     );
   }
 
-  // Se não houver espécies que correspondam a todos os filtros, gerar combinações
+  // Se nenhuma espécie corresponder a todos os filtros, gera combinações de filtros
   if (matchedSpecies.length === 0 && filter?.length) {
-    const filterCombinations = generateCombinations(filter);
+    const filterCombinations = generateCombinations(filter); // Gera combinações dos filtros
 
     filterCombinations.forEach((combination) => {
       const speciesGroup = species.filter((specie) =>
-        matchesTherapeuticEffects(specie, combination)
+        matchesTherapeuticEffects(specie, combination) // Verifica se a espécie corresponde à combinação de filtros
       );
 
       if (speciesGroup.length > 0) {
-        const groupName = `Espécies: ${combination.join(" + ")}`;
+        const groupName = `Espécies: ${combination.join(" + ")}`; // Nomeia o grupo de acordo com a combinação de filtros
         results = results.concat(
           speciesGroup.map((cur) => ({
             name: cur.name,
-            group: groupName,
+            group: groupName, // Adiciona o grupo correspondente à combinação de filtros
             q: `especie:${cur.id}`,
           }))
         );
@@ -96,16 +97,16 @@ export default async (_, { q, filter }, ctx) => {
     });
   }
 
-  // Filter Specie records to ensure they have all specified metabolites on filter list
+  // Filtra as espécies para garantir que todas contenham os metabólitos especificados no filtro
   species = species.filter((specie) => {
     if (filter) {
       return filter.every((filterName) => {
         return specie.therapeuticEffects.some((therapeuticEffect) => {
-          return filterName === therapeuticEffect.term;
+          return filterName === therapeuticEffect.term; // Verifica se o efeito terapêutico existe na espécie
         });
       });
     }
-    return true;
+    return true; // Se não houver filtro, retorna todas as espécies
   });
 
   results = results.concat(
@@ -122,6 +123,7 @@ export default async (_, { q, filter }, ctx) => {
     )
   );
 
+  // Busca nomes populares de espécies que contenham a query 'q'
   let popularNames = await ctx.prisma.popularName.findMany({
     where: {
       name: {
@@ -132,13 +134,13 @@ export default async (_, { q, filter }, ctx) => {
     include: {
       specie: {
         include: {
-          therapeuticEffects: true,
+          therapeuticEffects: true, // Inclui efeitos terapêuticos no resultado
         },
       },
     },
   });
 
-  // Filter PopularName records to ensure they have all specified metabolites on filter list
+  // Filtra nomes populares para garantir que todos tenham os metabólitos especificados no filtro
   popularNames = popularNames.filter((popularName) => {
     if (filter) {
       return filter.every((filterName) => {
@@ -166,6 +168,7 @@ export default async (_, { q, filter }, ctx) => {
     )
   );
 
+  // Busca derivados de metabolismo secundário que contenham a query 'q'
   const secondaryMetabolismDerivatives =
     await ctx.prisma.secondaryMetabolismDerivatives.findMany({
       where: {
@@ -174,7 +177,7 @@ export default async (_, { q, filter }, ctx) => {
           mode: "insensitive",
         },
       },
-      take: 7,
+      take: 7, // Limita a busca a 7 resultados
     });
 
   results = results.concat(
@@ -183,7 +186,7 @@ export default async (_, { q, filter }, ctx) => {
         ...acc,
         {
           name: cur.name,
-          group: "Derivados de metabólismo secundário",
+          group: "Derivados de metabolismo secundário",
           q: `metabolito:${cur.id}`,
         },
       ],
@@ -191,7 +194,7 @@ export default async (_, { q, filter }, ctx) => {
     )
   );
 
-  // search therapeutic effects and add to results
+  // Busca efeitos terapêuticos que contenham a query 'q'
   const therapeuticEffects = await ctx.prisma.therapeuticEffect.findMany({
     where: {
       term: {
@@ -199,7 +202,7 @@ export default async (_, { q, filter }, ctx) => {
         mode: "insensitive",
       },
     },
-    take: 7,
+    take: 7, // Limita a busca a 7 resultados
   });
 
   results = results.concat(
@@ -216,5 +219,8 @@ export default async (_, { q, filter }, ctx) => {
     )
   );
 
-  return results;
+  // Remover duplicatas nos resultados com base na chave 'q'
+  results = _.uniqBy(results, "q");
+
+  return results; // Retorna todos os resultados encontrados
 };
